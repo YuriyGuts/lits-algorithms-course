@@ -1,0 +1,32 @@
+% -------------------------------
+% Custom formatting for headings
+% -------------------------------
+\usepackage{titlesec}
+
+% Chapters
+\titleformat
+    {\chapter}                      % command
+    [display]                       % shape
+    {\large\bfseries}               % format
+    {Модуль \thechapter}            % label
+    {0.5ex}                         % sep
+    {
+        \rule{\textwidth}{1.5pt}
+        \vspace{0.5ex}
+        \centering
+        \mdseries
+        \itshape
+    }                               % before-code
+    [
+        \vspace{-1.5ex}
+        \rule{\textwidth}{0.3pt}
+    ]                               % after-code
+
+% Sections
+\titleformat
+    {\section}                      % command
+    {\normalsize\bfseries}          % format
+    {\thesection }                  % label
+    {1em}                           % sep
+    {}                              % before-code
+    []                              % after-code
