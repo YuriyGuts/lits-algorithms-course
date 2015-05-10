@@ -8,7 +8,7 @@
     {\chapter}                      % command
     [display]                       % shape
     {\large\bfseries}               % format
-    {Модуль \thechapter}            % label
+    {\vspace{-3em} Модуль \thechapter}            % label
     {0.5ex}                         % sep
     {
         \rule{\textwidth}{1.5pt}
@@ -18,7 +18,7 @@
         \itshape
     }                               % before-code
     [
-        \vspace{-1.5ex}
+        \vspace{-1.7ex}
         \rule{\textwidth}{0.3pt}
     ]                               % after-code
 
@@ -26,7 +26,16 @@
 \titleformat
     {\section}                      % command
     {\normalsize\bfseries}          % format
-    {\thesection }                  % label
+    {\thesection}                   % label
+    {1em}                           % sep
+    {}                              % before-code
+    []                              % after-code
+
+% Subsections
+\titleformat
+    {\subsection}                   % command
+    {\normalsize\bfseries\itshape}  % format
+    {\thesubsection}                % label
     {1em}                           % sep
     {}                              % before-code
     []                              % after-code
