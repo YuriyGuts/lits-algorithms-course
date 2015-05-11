@@ -1,6 +1,8 @@
 % ----------------
 % List formatting
 % ----------------
+
+% List spacing
 \usepackage{paralist}
     \let\itemize\compactitem
     \let\enditemize\endcompactitem
@@ -11,3 +13,24 @@
     \pltopsep=\medskipamount
     \plitemsep=1pt
     \plparsep=1pt
+
+% Automatic list item counting
+\usepackage{etoolbox,refcount}
+\newcounter{countitems}
+\newcounter{nextitemizecount}
+\newcommand{\setupcountitems}{%
+  \stepcounter{nextitemizecount}%
+  \setcounter{countitems}{0}%
+  \preto\item{\stepcounter{countitems}}%
+}
+\makeatletter
+\newcommand{\computecountitems}{%
+  \edef\@currentlabel{\number\c@countitems}%
+  \label{countitems@\number\numexpr\value{nextitemizecount}-1\relax}%
+}
+\newcommand{\nextitemizecount}{%
+  \getrefnumber{countitems@\number\c@nextitemizecount}%
+}
+\makeatother
+\AtBeginEnvironment{itemize}{\setupcountitems}
+\AtEndEnvironment{itemize}{\computecountitems}
