@@ -1,0 +1,23 @@
+% ---------------------------
+% Custom formatting for code
+% ---------------------------
+
+\usepackage{listings}
+\usepackage{inconsolata}
+\usepackage{upquote}
+
+
+\lstdefinestyle{codePythonStyle}{
+    language=Python,
+    basewidth=0.53em,
+    stepnumber=1,
+    numbersep=8pt,
+    tabsize=4,
+    showspaces=false,
+    showstringspaces=false
+}
+
+\lstset{
+    basicstyle=\fontencoding{T1}\selectfont\ttfamily\small,
+    style=codePythonStyle
+}

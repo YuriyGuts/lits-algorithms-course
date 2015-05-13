@@ -1,10 +1,7 @@
 \documentclass[12pt,a4paper]{report}
 
 \input{../include/language.tex}
-\input{../include/style-headings.tex}
-\input{../include/style-lists.tex}
-\input{../include/style-paragraphs.tex}
-\input{../include/debug.tex}
+\input{../include/styles.tex}
 
 \usepackage{tikz}
 \usepackage{pgfplots}
@@ -263,7 +260,7 @@
 
 Для того, щоб побачити, наскільки суттєво відрізняються ці класи, порівняємо приблизний час виконання для різних значень \(n\):
 
-\scalebox{0.7} {
+\scalebox{0.9} {
     \begin{tabular}{r|llllll}
     \toprule
     n               & \(\log{}n\)  & \(n\)       & \(n \log{}n\) & \(n^2\)       & \(2^n\)     & \(n!\) \\
