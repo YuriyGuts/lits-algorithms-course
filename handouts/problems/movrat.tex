@@ -1,0 +1,94 @@
+\documentclass[12pt,a4paper]{article}
+
+\input{../include/language.tex}
+\input{../include/styles.tex}
+
+
+\begin{document}
+
+\section*{Кінорейтинги}
+
+
+\subsection*{Код задачі: \lstinline{MOVRAT}}
+
+Веб-сайт для кінолюбителів дозволяє користувачам виставляти оцінки для кожного фільму. Проте, щоб зменшити вплив тролів та нечесного накручування рейтингу, сайт може відкидати кілька найнижчих та найвищих оцінок, і не враховувати їх при обчисленні рейтингу фільму.
+
+Кожен користувач виставляє для фільму цілочисельну оцінку від 0 до 100. Після відкидання зайвих оцінок, рейтинг обчислюється як середнє арифметичне оцінок, що залишилися.
+
+Ваше завдання --- маючи масив оцінок користувачів, а також квоту, скільки найнижчих і найвищих оцінок треба відкинути, підрахувати рейтинг фільму.
+
+
+\subsection*{Вхідні дані}
+
+Вхідний файл \lstinline[language=]{movrat.in} складається з 4 рядків.
+
+\begin{itemize}
+    \item Перший рядок містить \lstinline{N} --- кількість оцінок користувачів. \lstinline{N} --- натуральне число від 1 до 10 000 000.
+    \item Наступний рядок містить \lstinline{N} цілих чисел від 0 до 100, розділених пробілом --- оцінки окремих користувачів.
+    \item Третій рядок містить \lstinline{lowIgnoreCount} --- ціле число від 0 до 99, яке означатиме кількість найнижчих оцінок, які треба відкинути.
+    \item Четвертий рядок містить \lstinline{highIgnoreCount} --- ціле число від 0 до 99, яке означатиме кількість найвищих оцінок, які треба відкинути.
+    \item Сума \lstinline{lowIgnoreCount + highIgnoreCount} завжди буде меншою за \lstinline{N}.
+\end{itemize}
+
+
+\subsection*{Вихідні дані}
+
+Вихідний файл \lstinline[language=]{movrat.out} повинен містити одне ціле число --- рейтинг фільму. Дробова частина повинна відкидатися.
+
+
+\subsection*{Приклади}
+
+\subsubsection*{Приклад 1}
+
+\textbf{\lstinline[language=]{movrat.in}}
+
+\begin{lstlisting}[language=]
+5
+40 50 22 17 0
+0
+0
+\end{lstlisting}
+
+\textbf{\lstinline[language=]{movrat.out}}
+
+\begin{lstlisting}[language=]
+25
+\end{lstlisting}
+
+
+\subsubsection*{Приклад 2}
+
+\textbf{\lstinline[language=]{movrat.in}}
+
+\begin{lstlisting}[language=]
+5
+40 50 22 17 0
+1
+2
+\end{lstlisting}
+
+\textbf{\lstinline[language=]{movrat.out}}
+
+\begin{lstlisting}[language=]
+19
+\end{lstlisting}
+
+
+\subsubsection*{Приклад 3}
+
+\textbf{\lstinline[language=]{movrat.in}}
+
+\begin{lstlisting}[language=]
+3
+0 100 0
+1
+1
+\end{lstlisting}
+
+\textbf{\lstinline[language=]{movrat.out}}
+\begin{lstlisting}[language=]
+0
+\end{lstlisting}
+
+
+\end{document}
