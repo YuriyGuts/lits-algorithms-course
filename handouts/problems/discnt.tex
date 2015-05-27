@@ -1,0 +1,91 @@
+\documentclass[12pt,a4paper]{article}
+
+\input{../include/language.tex}
+\input{../include/star-rating.tex}
+\input{../include/styles.tex}
+
+
+\begin{document}
+
+\section*{Дисконтна програма \hfill \fivestarrating{2}}
+
+
+\subsection*{Код задачі: \code{DISCNT}}
+
+Магазин модного одягу розпочав сезонний розпродаж, і пропонує покупцям знижку на кожен 3-ій придбаний товар.
+Ви визначилися, які товари вас цікавлять, і бажаєте скористатися цією пропозицією, щоб максимально зекономити кошти.
+Лишилося лише придумати, в якому порядку ви купуватимете товари.
+
+Знаючи ціну кожного товару, а також відсоток знижки, підрахуйте, яку мінімальну суму вам доведеться заплатити за всі товари.
+
+
+\subsection*{Вхідні дані}
+
+Вхідний файл |discnt.in| складається з двох рядків.
+
+\begin{itemize}
+    \item Перший рядок містить перелік цілих чисел від 0 до 1000 включно, розділених пробілом --- ціни окремих товарів. Загальна кількість товарів не перевищує 1~000~000.
+    \item Другий рядок містить |discount| --- ціле число від 0 до 100 включно, яке означає відсоток знижки за кожен третій товар.
+\end{itemize}
+
+
+\subsection*{Вихідні дані}
+
+Вихідний файл |discnt.out| повинен містити одне число --- мінімальна сума, яку потрібно витратити, щоб придбати всі товари. Число повинне завжди мати два дробові знаки, і округлюватися до другого знаку після крапки.
+
+
+\pagebreak
+
+
+\subsection*{Приклади}
+
+\subsubsection*{Приклад 1}
+
+\textbf{\code{discnt.in}}
+
+\begin{codeblock}
+50 20 30 17 100
+10
+\end{codeblock}
+
+\textbf{\code{discnt.out}}
+
+\begin{codeblock}
+207.00
+\end{codeblock}
+\emph{Пояснення:} Можна придбати в такому порядку: \((20 + 50 + 100\cdot0.9 + 17 + 30) = 207\)
+
+
+\subsubsection*{Приклад 2}
+
+\textbf{\code{discnt.in}}
+
+\begin{codeblock}
+1 2 3 4 5 6 7
+100
+\end{codeblock}
+
+\textbf{\code{discnt.out}}
+
+\begin{codeblock}
+15.00
+\end{codeblock}
+
+
+\subsubsection*{Приклад 3}
+
+\textbf{\code{discnt.in}}
+
+\begin{codeblock}
+1 1 1
+33
+\end{codeblock}
+
+\textbf{\code{discnt.out}}
+
+\begin{codeblock}
+2.67
+\end{codeblock}
+
+
+\end{document}
