@@ -1,0 +1,8 @@
+\usepackage{bbding}
+\usepackage{ifthen}
+\usepackage{pgffor}
+
+\newcommand{\fivestarrating}[1]{%
+    \ifthenelse{\not\equal{#1}{0}}{\foreach \n in {1,...,#1}{\FiveStar}}{}%
+    \ifthenelse{\not\equal{#1}{5}}{\foreach \n in {\numexpr(#1+1),...,5}{\FiveStarOpen}}{}%
+}%

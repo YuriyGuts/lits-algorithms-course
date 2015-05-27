@@ -17,6 +17,15 @@
     showstringspaces=false
 }
 
+\lstMakeShortInline[language=]|
+
+\newcommand{\code}{\lstinline[language=]}
+
+\lstnewenvironment{codeblock}
+    {\lstset{language=}}
+    {}
+
+
 \lstset{
     basicstyle=\fontencoding{T1}\selectfont\ttfamily\small,
     style=codePythonStyle
