@@ -3,12 +3,17 @@
 % ---------------------------
 
 \usepackage{listings}
+\usepackage{color}
 \usepackage{inconsolata}
 \usepackage{upquote}
 
+\definecolor{commentcolor}{rgb}{0.6,0.6,0.6}
 
+
+% Style to be used by all Python source listings.
 \lstdefinestyle{codePythonStyle}{
     language=Python,
+    commentstyle=\color{commentcolor},
     basewidth=0.53em,
     stepnumber=1,
     numbersep=8pt,
@@ -17,15 +22,19 @@
     showstringspaces=false
 }
 
+% A shorthand syntax for language-neutral inline code blocks, e.g. |foo|
 \lstMakeShortInline[language=]|
 
+% A shorthand syntax for language-neutral inline code blocks, e.g. \code{foo}
 \newcommand{\code}{\lstinline[language=]}
 
+% Language-neutral multiline code blocks.
 \lstnewenvironment{codeblock}
     {\lstset{language=}}
     {}
 
 
+% Use Python by default.
 \lstset{
     basicstyle=\fontencoding{T1}\selectfont\ttfamily\small,
     style=codePythonStyle
