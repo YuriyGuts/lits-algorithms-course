@@ -1,15 +1,25 @@
 \documentclass[12pt,a4paper]{report}
 
-\input{../include/language.tex}
-\input{../include/styles.tex}
-
 \usepackage{tikz}
 \usepackage{pgfplots}
 \usepackage{booktabs}
 
+% The pipe character gets overriden in the code style definition, specify the table header beforehand.
+\newcommand{\timetablelayout}{r|llllll}
+
+\input{../include/language.tex}
+\input{../include/styles.tex}
+
+
 \begin{document}
 
 \chapter{Вступ. Аналіз складності алгоритмів.}
+
+% Insert table of contents.
+\begingroup
+\let\clearpage\relax
+\tableofcontents
+\endgroup
 
 
 
@@ -25,6 +35,7 @@
 \end{itemize}
 
 
+\begin{minipage}{\linewidth}
 \subsection*{Опис задачі}
 Навіть найменші деталі можуть вплинути на вибір алгоритму для вирішення задачі.
 Тому при її описі варто вказувати:
@@ -46,8 +57,9 @@
         {\itshape Одне натуральне число --- \(N_{min}\).}
 
 \end{enumerate}
+\end{minipage}
 
-
+\begin{minipage}{\linewidth}
 \subsection*{Аналіз алгоритмів}
 Три запитання, які дозволяють проаналізувати алгоритм:
 \begin{enumerate}
@@ -55,7 +67,7 @@
     \item Наскільки алгоритм хороший?
     \item Чи можна вирішити задачу краще?
 \end{enumerate}
-
+\end{minipage}
 
 
 \section{Запитання №1 --- ``Чи алгоритм правильний?''}
@@ -260,8 +272,8 @@
 
 Для того, щоб побачити, наскільки суттєво відрізняються ці класи, порівняємо приблизний час виконання для різних значень \(n\):
 
-\scalebox{0.9} {
-    \begin{tabular}{r|llllll}
+\scalebox{0.9} {%
+    \begin{tabular}{\timetablelayout}
     \toprule
     n               & \(\log{}n\)  & \(n\)       & \(n \log{}n\) & \(n^2\)       & \(2^n\)     & \(n!\) \\
     \midrule
