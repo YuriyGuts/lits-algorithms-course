@@ -1,0 +1,110 @@
+\documentclass[12pt,a4paper]{article}
+
+\usepackage{tikz}
+
+\input{../include/language.tex}
+\input{../include/star-rating.tex}
+\input{../include/styles.tex}
+\input{overrides/style-problems.tex}
+
+
+\begin{document}
+
+\section*{Баг-трекер \hfill \fivestarrating{2}}
+
+
+\subsection*{Код задачі: \code{BUGTRK}}
+
+Після швидкого випуску нової версії своєї операційної системи, компанія NanoSoft почала отримувати від користувачів численні повідомлення про помилки.
+Щоб оперативно виправити їх, команда розробників вирішила поставити велику квадратну дошку, і прикріпити до неї по листку для кожної помилки.
+Проте, щоб дошка вмістилася в кімнаті, потрібно, щоб вона була не надто великою.
+
+Всі \(N\) листків мають прямокутну форму і однаковий розмір \(W \times H\). Їх не можна повертати, а також накладати один на інший.
+
+Знайдіть мінімальний розмір квадратної дошки, яка здатна вмістити всі листки.
+
+Приклад мінімальної дошки, яка може вмістити 10 листків \(2 \times 3\):
+
+\begin{center}
+    \begin{tikzpicture}
+        \draw[step=0.5cm,lightgray,very thin] (0,0) grid (4.5,4.5);
+        \filldraw[fill=blue!20!white, draw=gray] (0,3) rectangle (1,4.5);
+        \filldraw[fill=blue!20!white, draw=gray] (1.5,3) rectangle (2.5,4.5);
+        \filldraw[fill=blue!20!white, draw=gray] (3.5,3) rectangle (4.5,4.5);
+        \filldraw[fill=blue!20!white, draw=gray] (0,1.5) rectangle (1,3);
+        \filldraw[fill=blue!20!white, draw=gray] (1,1.5) rectangle (2,3);
+        \filldraw[fill=blue!20!white, draw=gray] (2.5,1.5) rectangle (3.5,3);
+        \filldraw[fill=blue!20!white, draw=gray] (3.5,1.5) rectangle (4.5,3);
+        \filldraw[fill=blue!20!white, draw=gray] (0,0) rectangle (1,1.5);
+        \filldraw[fill=blue!20!white, draw=gray] (1.5,0) rectangle (2.5,1.5);
+        \filldraw[fill=blue!20!white, draw=gray] (3,0) rectangle (4,1.5);
+    \end{tikzpicture}
+\end{center}
+
+
+\subsection*{Вхідні дані}
+
+Вхідний файл |bugtrk.in| складається з одного рядка.
+Він містить три числа, розділені пробілом: \(N, W, H\) --- кількість листків, ширина та висота листка відповідно.
+
+\begin{itemize}
+    \item \(1 \leq N \leq 10^{12} \)
+    \item \(1 \leq W \leq 10^{9} \)
+    \item \(1 \leq H \leq 10^{9} \)
+\end{itemize}
+
+
+\subsection*{Вихідні дані}
+
+Вихідний файл |bugtrk.out| повинен містити одне число --- мінімальна довжина сторони квадратної дошки.
+
+
+\pagebreak
+
+
+\subsubsection*{Приклад 1}
+
+\textbf{\code{bugtrk.in}}
+
+\begin{codeblock}
+10 2 3
+\end{codeblock}
+
+\textbf{\code{bugtrk.out}}
+
+\begin{codeblock}
+9
+\end{codeblock}
+
+
+\subsubsection*{Приклад 2}
+
+\textbf{\code{bugtrk.in}}
+
+\begin{codeblock}
+2 1000000000 999999999
+\end{codeblock}
+
+\textbf{\code{bugtrk.out}}
+
+\begin{codeblock}
+2000000000
+\end{codeblock}
+
+
+\subsubsection*{Приклад 3}
+
+\textbf{\code{bugtrk.in}}
+
+\begin{codeblock}
+4 1 1
+\end{codeblock}
+
+\textbf{\code{bugtrk.out}}
+
+\begin{codeblock}
+2
+\end{codeblock}
+
+
+\end{document}
