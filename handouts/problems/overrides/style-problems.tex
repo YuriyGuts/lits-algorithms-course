@@ -1,0 +1,25 @@
+% ---------------------------------------------
+% Custom formatting for input/output examples
+% ---------------------------------------------
+
+\usepackage{xcolor}
+
+
+\titleformat
+    {\subsubsection}                % command
+    [display]                       % shape
+    {\normalsize\mdseries}          % format
+    {}                              % label
+    {0.5ex}                         % sep
+    {
+        \colorexample
+    }                               % before-code
+
+\newcommand{\colorexample}[1]{%
+    \colorbox{gray!20}{%
+        \parbox{%
+            \dimexpr\textwidth-2\fboxsep
+        }%
+        {#1}
+    }%
+}
