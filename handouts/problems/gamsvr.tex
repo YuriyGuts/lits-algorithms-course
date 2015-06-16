@@ -1,0 +1,173 @@
+\documentclass[12pt,a4paper]{article}
+
+\usepackage{tikz}
+
+\input{../include/language.tex}
+\input{../include/star-rating.tex}
+\input{../include/styles.tex}
+\input{overrides/style-problems.tex}
+
+
+\begin{document}
+
+\section*{Ігровий сервер \hfill \fivestarrating{4}}
+
+
+\subsection*{Код задачі: \code{GAMSVR}}
+
+Важливим фактором для багатокористувацької онлайн-гри є низька мережева затримка від користувача до сервера.
+При цьому, пристрої в Інтернеті спілкуються один з одним, використовуючи мережеві маршрути, які проходять через низку проміжних вузлів-маршрутизаторів. Кожна ланка цього маршруту має власну ненульову затримку.
+
+\begin{center}
+    \footnotesize
+    \begin{tikzpicture}
+        \path (0,0) node[circle,draw] (client1) {Client 1}
+              (2,-3) node[circle,draw] (client2) {Client 2}
+              (3,0) node[circle,draw] (router1) {Router 1}
+              (6,0) node[circle,draw] (router2) {Router 2}
+              (9,0) node[circle,draw] (server) {SERVER}
+              (12,0) node[circle,draw] (client3) {Client 3};
+
+        \draw[dotted]
+            (client1) -- node[above,sloped] {10 ms} (router1)
+                      -- node[above,sloped] {80 ms} (router2)
+                      -- node[above,sloped] {50 ms} (server)
+                      -- node[above,sloped] {20 ms} (client3)
+            (client2) -- node[above,sloped] {40 ms} (router1)
+            (client2) -- node[above,sloped] {100 ms} (router2);
+    \end{tikzpicture}
+\end{center}
+
+\begin{itemize}
+    \item Кожен вузол мережі може виконувати одну з трьох ролей: Client, Router або Server.
+    \item Server може бути лише один на всю мережу.
+    \item Усі комунікації двосторонні: якщо вузол A може спілкуватися з вузлом B, вузол B може спілкуватися з вузлом A з такою ж затримкою.
+    \item Якщо існує кілька шляхів від клієнта до сервера, клієнт гарантовано піде шляхом з найменшою сумарною затримкою (навіть якщо цей шлях пролягає через іншого клієнта).
+    \item Усі затримки --- сталі додатні числа.
+\end{itemize}
+
+Для прикладу вище, затримки до клієнтів становлять:
+\begin{itemize}
+    \item Client 1: 10 + 80 + 50 = 140 ms
+    \item Client 2: 100 + 50 = 150 ms
+    \item Client 3: 20 ms
+\end{itemize}
+
+Максимальною затримкою в такому випадку є 150 ms. Однак, якщо ми поміняємо ролями вузли ``Router 2'' і ``Server'', затримки скоротяться до 90 ms, 100 ms і 70 ms відповідно, тоді максимальна затримка буде становити 100 ms.
+
+\begin{center}
+    \footnotesize
+    \begin{tikzpicture}
+        \path (0,0) node[circle,draw] (client1) {Client 1}
+              (2,-3) node[circle,draw] (client2) {Client 2}
+              (3,0) node[circle,draw] (router1) {Router 1}
+              (6,0) node[circle,draw] (router2) {SERVER}
+              (9,0) node[circle,draw] (server) {Router 2}
+              (12,0) node[circle,draw] (client3) {Client 3};
+
+        \draw[dotted]
+            (client1) -- node[above,sloped] {10 ms} (router1)
+                      -- node[above,sloped] {80 ms} (router2)
+                      -- node[above,sloped] {50 ms} (server)
+                      -- node[above,sloped] {20 ms} (client3)
+            (client2) -- node[above,sloped] {40 ms} (router1)
+            (client2) -- node[above,sloped] {100 ms} (router2);
+    \end{tikzpicture}
+\end{center}
+
+
+Ви розробляєте онлайн-гру для користувачів зі всієї країни, і бажаєте розмістити центральний ігровий сервер таким чином, щоб максимальна затримка між сервером і кожним клієнтом була мінімальною. В якості сервера можна вибрати будь-який вузол мережі, який не є клієнтом.
+
+Маючи інформацію про топологію мережі (які вузли з’єднані з якими, і яка затримка кожного з’єднання), знайдіть таке розташування сервера, яке мінімізує найбільше значення затримки до клієнта. Виведіть це значення затримки.
+
+
+\subsection*{Вхідні дані}
+
+Вхідний файл |gamsvr.in| складається з \(M + 2\) рядків.
+
+\begin{itemize}
+    \item Перший рядок містить \(N\) і \(M\) --- кількість вузлів та з’єднань відповідно.
+
+    \(3 \leq N \leq 1000\), \(2 \leq M \leq 1000\)
+    \item Другий рядок містить перелік цілих чисел, розділених пробілом --- номери вузлів, які є клієнтами. Усі вузли в мережі нумеруються від 1 до \(N\).
+    \item Наступні \(M\) рядків містять трійки натуральних чисел \(startnode\), \(endnode\), \(latency\) --- номер початкового вузла, кінцевого вузла та затримка для кожного з’єднання. \(1 \leq latency \leq 10^9\).
+\end{itemize}
+
+
+\subsection*{Вихідні дані}
+
+Вихідний файл |gamsvr.out| повинен містити одне число --- мінімальне значення найбільшої затримки до клієнта (яке ми отримаємо при оптимальному розташуванні сервера).
+
+
+\pagebreak
+
+
+\subsubsection*{Приклад 1}
+
+\textbf{\code{gamsvr.in}}
+
+\begin{codeblock}
+6 6
+1 2 6
+1 3 10
+3 4 80
+4 5 50
+5 6 20
+2 3 40
+2 4 100
+\end{codeblock}
+
+\textbf{\code{gamsvr.out}}
+
+\begin{codeblock}
+100
+\end{codeblock}
+
+
+\subsubsection*{Приклад 2}
+
+\textbf{\code{gamsvr.in}}
+
+\begin{codeblock}
+9 12
+2 4 6
+1 2 20
+2 3 20
+3 6 20
+6 9 20
+9 8 20
+8 7 20
+7 4 20
+4 1 20
+5 2 10
+5 4 10
+5 6 10
+5 8 10
+\end{codeblock}
+
+\textbf{\code{gamsvr.out}}
+
+\begin{codeblock}
+10
+\end{codeblock}
+
+
+\subsubsection*{Приклад 3}
+
+\textbf{\code{gamsvr.in}}
+
+\begin{codeblock}
+3 2
+1 3
+1 2 50
+2 3 1000000000
+\end{codeblock}
+
+\textbf{\code{gamsvr.out}}
+
+\begin{codeblock}
+1000000000
+\end{codeblock}
+
+
+\end{document}
