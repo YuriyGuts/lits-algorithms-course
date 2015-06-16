@@ -1,0 +1,109 @@
+\documentclass[12pt,a4paper]{article}
+
+\input{../include/language.tex}
+\input{../include/star-rating.tex}
+\input{../include/styles.tex}
+\input{overrides/style-problems.tex}
+
+
+\begin{document}
+
+\section*{Державна установа \hfill \fivestarrating{3}}
+
+
+\subsection*{Код задачі: \code{GOVERN}}
+
+Для закордонної поїздки вам потрібна довідка від держустанови. Проте, виявилося, що для отримання цієї довідки потрібні інші довідки, а ті, в свою чергу, потребують ще інших довідок.
+
+На отримання кожної довідки потрібно вистояти чергу, тому ви хочете зекономити час, не стоячи в черзі дарма (якщо ви не будете мати потрібних довідок, стоячи в черзі, вам відмовлять у видачі цієї).
+
+Маючи інформацію про те, які довідки потрібні для яких, визначте оптимальний порядок отримання довідок, при якому вам жодного разу не відмовлять у видачі. Якщо таких оптимальних варіантів кілька --- виведіть будь-який із них.
+
+
+\subsection*{Вхідні дані}
+
+Кожен із \(N\) рядків вхідного файлу |govern.in| містить два слова, розділені пробілом --- назва довідки та довідка, яку потрібно отримати перед нею.
+
+\begin{itemize}
+    \item Рядків може бути від 1 до 100000.
+    \item Слова мають довжину від 1 до 50 літер і складаються з малих літер латинського алфавіту від |a| до |z|.
+    \item Якщо для однієї довідки потрібно отримати N інших, файл міститиме N рядків, що починатимуться на одне й те саме слово.
+    \item Гарантовано існує хоча б один порядок отримання довідок, при якому можна отримати усі довідки.
+\end{itemize}
+
+Кодування файлу --- UTF-8 (without BOM).
+
+
+\subsection*{Вихідні дані}
+
+Вихідний файл |govern.out| повинен містити \(N\) рядків --- назви довідок в порядку їх рекомендованого отримання.
+
+\emph{Примітка:} Після останнього слова також повинен бути символ переносу рядка (newline).
+
+
+\pagebreak
+
+
+\subsubsection*{Приклад 1}
+
+\textbf{\code{govern.in}}
+
+\begin{codeblock}
+visa foreignpassport
+visa hotel
+visa bankstatement
+bankstatement nationalpassport
+hotel creditcard
+creditcard nationalpassport
+nationalpassport birthcertificate
+foreignpassport nationalpassport
+foreignpassport militarycertificate
+militarycertificate nationalpassport
+\end{codeblock}
+
+\textbf{\code{govern.out}}
+
+\begin{codeblock}
+birthcertificate
+nationalpassport
+militarycertificate
+foreignpassport
+creditcard
+hotel
+bankstatement
+visa
+\end{codeblock}
+
+
+\subsubsection*{Приклад 2}
+
+\textbf{\code{govern.in}}
+
+\begin{codeblock}
+visa foreignpassport
+\end{codeblock}
+
+\textbf{\code{govern.out}}
+
+\begin{codeblock}
+foreignpassport
+visa
+\end{codeblock}
+
+
+\subsubsection*{Приклад 3}
+
+\textbf{\code{govern.in}}
+
+\begin{codeblock}
+visa
+\end{codeblock}
+
+\textbf{\code{govern.out}}
+
+\begin{codeblock}
+visa
+\end{codeblock}
+
+
+\end{document}
