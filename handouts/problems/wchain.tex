@@ -1,0 +1,117 @@
+\documentclass[12pt,a4paper]{article}
+
+\usepackage{tikz}
+
+\input{../include/language.tex}
+\input{../include/star-rating.tex}
+\input{../include/styles.tex}
+\input{overrides/style-problems.tex}
+
+
+\begin{document}
+
+\section*{Ланцюжок зі слів \hfill \fivestarrating{4}}
+
+
+\subsection*{Код задачі: \code{WCHAIN}}
+
+Двоє учасників грають у лінгвістичну гру.
+На початку гри дано список із \(N\) слів. Перший гравець обирає довільне слово \(w_1\) і викреслює з нього одну довільну літеру так, щоб отримати інше слово \(w_2\) з цього списку. Після цього хід переходить до іншого гравця, і він намагається зробити те саме зі словом \(w_2\).
+
+Гра завершується в одному з двох випадків:
+
+\begin{itemize}
+    \item Залишається слово з однієї літери.
+    \item Неможливо викреслити жодну літеру так, щоб отримати інше слово зі словника.
+\end{itemize}
+
+Визначте довжину максимального ланцюжка, якого можна досягти в цій грі при заданих словах. Очевидно, що довжина максимального ланцюжка = максимальна кількість ходів + 1.
+
+
+\subsection*{Вхідні дані}
+
+Вхідний файл |wchain.in| складається з \(N + 1\) рядків.
+\begin{itemize}
+    \item Перший рядок містить \(N\) --- кількість слів у словнику, \(1 \leq N \leq 10^6\).
+    \item Кожен з наступних \(N\) рядків містить слово довжиною від 1 до 50 символів, яке складається з малих латинських літер від |a| до |z|.
+\end{itemize}
+
+Кодування файлу --- UTF-8 (without BOM).
+
+
+\subsection*{Вихідні дані}
+
+Вихідний файл |wchain.out| повинен містити одне число --- довжина максимального ланцюжка.
+
+
+\pagebreak
+
+
+\subsubsection*{Приклад 1}
+
+\textbf{\code{wchain.in}}
+
+\begin{codeblock}
+10
+crates
+car
+cats
+crate
+rate
+at
+ate
+tea
+rat
+a
+\end{codeblock}
+
+\textbf{\code{wchain.out}}
+
+\begin{codeblock}
+6
+\end{codeblock}
+
+\emph{Пояснення:} Можливий ланцюжок: |crates| > |crate| > |rate| > |ate| > |at| > |a|.
+
+
+\subsubsection*{Приклад 2}
+
+\textbf{\code{wchain.in}}
+
+\begin{codeblock}
+5
+b
+bcad
+bca
+bad
+bd
+\end{codeblock}
+
+\textbf{\code{wchain.out}}
+
+\begin{codeblock}
+4
+\end{codeblock}
+
+\emph{Пояснення:} Можливий ланцюжок: |bcad| > |bad| > |bd| > |b|.
+
+
+\subsubsection*{Приклад 3}
+
+\textbf{\code{wchain.in}}
+
+\begin{codeblock}
+3
+word
+anotherword
+yetanotherword
+\end{codeblock}
+
+\textbf{\code{wchain.out}}
+
+\begin{codeblock}
+1
+\end{codeblock}
+
+
+\end{document}
