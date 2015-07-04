@@ -36,7 +36,7 @@ def read_graph_from_file(filename):
 def dijkstra(graph, start_vertex):
     # Initialization: setting all known shortest distances to infinity,
     # and the start vertex will have the shortest distance to itself equal to 0.
-    INFINITY = 1e10
+    INFINITY = 10 ** 10
     distances = [INFINITY for _ in graph.vertices]
     shortest_path_predecessor = [None for _ in graph.vertices]
     distances[start_vertex.label] = 0

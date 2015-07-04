@@ -47,7 +47,7 @@ def bellman_ford(graph, start_vertex):
     # Initialization of sub-problems:
     # For the start vertex, the shortest path with edge budget = 0 will be 0.
     # Other vertices will be unreachable given an edge budget of 0.
-    INFINITY = int(1e9)
+    INFINITY = 10 ** 9
     distances = [INFINITY for vertex in graph.vertices]
     distances[start_vertex.label] = 0
     predecessors = [None for vertex in graph.vertices]

@@ -25,7 +25,7 @@ def read_input(filename):
 
 
 def solve(string1, string2, penalties):
-    INFINITY = int(1e9)
+    INFINITY = 10 ** 9
 
     # The solutions array uses 1-based indexing, while Python strings use 0-based.
     solutions = [[INFINITY for j in range(0, len(string1) + 1)] for i in range(0, len(string1) + 1)]
