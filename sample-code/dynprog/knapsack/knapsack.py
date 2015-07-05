@@ -7,8 +7,8 @@ def main():
 def read_input(filename):
     with open(filename, "r") as input_file:
         capacity = int(input_file.readline())
-        items = [KnapsackItem(value=int(item_parameters[0]), weight=int(item_parameters[1]))
-                 for item_parameters in [item_line.split() for item_line in input_file.readlines()]]
+        items = [KnapsackItem(value=int(value_str), weight=int(weight_str))
+                 for value_str, weight_str in [item_line.split() for item_line in input_file.readlines()]]
     return capacity, items
 
 

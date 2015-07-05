@@ -18,8 +18,8 @@ def read_graph_from_file(filename):
 
         # Reading all (X, Y) coordinates from file and storing them as vertices.
         for i in range(0, vertex_count):
-            vertex_coordinates = [float(coord) for coord in input_file.readline().split()]
-            vertices.append(Vertex(i, vertex_coordinates[0], vertex_coordinates[1]))
+            x, y = [float(coord) for coord in input_file.readline().split()]
+            vertices.append(Vertex(i, x, y))
 
         # Precomputing the distances between each pair of points and storing the distances as edges.
         for i in range(0, vertex_count):

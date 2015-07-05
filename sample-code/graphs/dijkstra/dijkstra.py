@@ -1,8 +1,16 @@
 def main():
     graph = read_graph_from_file("graph01.txt")
     distances, shortest_path_predecessor = dijkstra(graph, graph.vertices[0])
-    print distances
-    print shortest_path_predecessor
+
+    for index, distance in enumerate(distances):
+        path = str(index)
+        previous_vertex = shortest_path_predecessor[index]
+
+        while previous_vertex is not None:
+            path = "%d -> %s" % (previous_vertex, path)
+            previous_vertex = shortest_path_predecessor[previous_vertex]
+
+        print "%d: %d  (%s)" % (index, distance, path)
 
 
 def read_graph_from_file(filename):
@@ -16,16 +24,16 @@ def read_graph_from_file(filename):
 
         # The next 'edge_count' lines describe the edges: "start_vertex end_vertex weight".
         for i in range(0, edge_count):
-            edge_params = [int(index) for index in input_file.readline().split()]
+            start_vertex, end_vertex, weight = [int(param) for param in input_file.readline().split()]
 
             # Adding the edge to the list of outbound edges for the start vertex.
-            edge = Edge(vertices[edge_params[0]], vertices[edge_params[1]], edge_params[2])
-            vertices[edge_params[0]].outbound_edges.append(edge)
+            edge = Edge(vertices[start_vertex], vertices[end_vertex], weight)
+            vertices[start_vertex].outbound_edges.append(edge)
 
             # For non-directed graphs, an outbound edge is also an inbound one (0 -> 1 == 1 -> 0).
             # Therefore, we reverse the edge and add it to the other vertex.
-            reverse_edge = Edge(vertices[edge_params[1]], vertices[edge_params[0]], edge_params[2])
-            vertices[edge_params[1]].outbound_edges.append(reverse_edge)
+            reverse_edge = Edge(vertices[end_vertex], vertices[start_vertex], weight)
+            vertices[end_vertex].outbound_edges.append(reverse_edge)
 
             edges.append(edge)
             edges.append(reverse_edge)

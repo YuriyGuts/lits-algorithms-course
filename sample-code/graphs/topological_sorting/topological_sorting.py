@@ -14,11 +14,11 @@ def read_graph_from_file(filename):
 
         # The next 'edge_count' lines describe the edges: "start_vertex end_vertex".
         for i in range(0, edge_count):
-            edge_indices = [int(index) for index in input_file.readline().split()]
+            start_vertex, end_vertex = [int(index) for index in input_file.readline().split()]
 
             # Adding the edge to the list of outbound edges for the start vertex.
-            edge = Edge(vertices[edge_indices[0]], vertices[edge_indices[1]])
-            vertices[edge_indices[0]].outbound_edges.append(edge)
+            edge = Edge(vertices[start_vertex], vertices[end_vertex])
+            vertices[start_vertex].outbound_edges.append(edge)
             edges.append(edge)
 
         return Graph(vertices, edges)
