@@ -1,0 +1,183 @@
+\documentclass[12pt,a4paper]{article}
+
+\usepackage{tikz}
+\usepackage{hyperref}
+
+\usetikzlibrary{arrows.meta}
+\usetikzlibrary{shapes.misc}
+
+\input{../include/language.tex}
+\input{../include/star-rating.tex}
+\input{../include/styles.tex}
+\input{overrides/style-problems.tex}
+
+\tikzset{
+    basic/.style = {text width=5pt, align=center}
+}
+
+
+\begin{document}
+
+\section*{Індіана Джонс і останній прямокутний обхід \hfill \fivestarrating{4}}
+
+
+\subsection*{Код задачі: \code{IJONES}}
+
+В пошуках Святого Грааля Індіана Джонс зіткнувся з небезпечним випробуванням.
+Йому потрібно пройти крізь прямокутний коридор, який складається з крихких плит (пригадайте \href{https://www.youtube.com/watch?v=arMXzgiZsJQ}{сцену з фільму} «Індіана Джонс і останній хрестовий похід»).
+На кожній плиті написана одна літера:
+
+\begin{center}
+    \begin{tikzpicture}
+        \begin{scope}[every node/.style={basic}]
+            \draw[step=1cm,gray,very thin] (0,0) grid (3,3);
+            \node at (0.5,2.5) (n11) {|a|}; \node at (1.5,2.5) (n21) {|a|}; \node [black!50!green] at (2.5,2.5) (n31) {|a|};
+            \node at (0.5,1.5) (n12) {|c|}; \node at (1.5,1.5) (n22) {|a|}; \node at (2.5,1.5) (n32) {|b|};
+            \node at (0.5,0.5) (n13) {|d|}; \node at (1.5,0.5) (n23) {|e|}; \node [black!50!green] at (2.5,0.5) (n33) {|f|};
+        \end{scope}
+    \end{tikzpicture}
+\end{center}
+
+Можна починати з будь-якої плити в найлівішому стовпці. Виходом із коридору є верхня права та нижня права плити (для прикладу вище --- |a| та |f|).
+
+Індіана спритний, і може переходити не лише на сусідню плиту, а й перестрибувати через кілька плит.
+Проте, щоб не провалитися крізь підлогу, він повинен дотримуватися таких правил:
+\begin{enumerate}
+    \item Після кожного кроку Індіана повинен опинятися правіше, ніж був перед цим.
+
+    \begin{center}
+        \begin{tikzpicture}
+            \begin{scope}[every node/.style={basic}]
+                \draw[step=1cm,gray,very thin] (0,0) grid (3,3);
+                \node at (0.5,2.5) (n11) {|a|}; \node at (1.5,2.5) (n21) {|a|}; \node at (2.5,2.5) (n31) {|a|};
+                \node at (0.5,1.5) (n12) {|c|}; \node at (1.5,1.5) (n22) {|a|}; \node at (2.5,1.5) (n32) {|b|};
+                \node at (0.5,0.5) (n13) {|d|}; \node at (1.5,0.5) (n23) {|e|}; \node at (2.5,0.5) (n33) {|f|};
+
+                \path [draw,->,-{Latex[length=3mm]},thick,black!50!green] (n11) -- (n21);
+                \path [draw,->,-{Latex[length=3mm]},thick,red] (n22) --node[cross out,draw,-]{} (n12);
+                \path [draw,->,-{Latex[length=3mm]},thick,red] (n22) --node[cross out,draw,-]{} (n23);
+                \path [draw,->,-{Latex[length=3mm]},thick,black!50!green] (n13) -- (n23);
+            \end{scope}
+        \end{tikzpicture}
+    \end{center}
+
+    \item Завжди можна переходити на одну плиту праворуч.
+
+    \begin{center}
+        \begin{tikzpicture}
+            \begin{scope}[every node/.style={basic}]
+                \draw[step=1cm,gray,very thin] (0,0) grid (3,3);
+                \node at (0.5,2.5) (n11) {|a|}; \node at (1.5,2.5) (n21) {|a|}; \node at (2.5,2.5) (n31) {|a|};
+                \node at (0.5,1.5) (n12) {|c|}; \node at (1.5,1.5) (n22) {|a|}; \node at (2.5,1.5) (n32) {|b|};
+                \node at (0.5,0.5) (n13) {|d|}; \node at (1.5,0.5) (n23) {|e|}; \node at (2.5,0.5) (n33) {|f|};
+
+                \path [draw,->,-{Latex[length=3mm]},thick,black!50!green] (n11) -- (n21);
+                \path [draw,->,-{Latex[length=3mm]},thick,black!50!green] (n21) -- (n31);
+                \path [draw,->,-{Latex[length=3mm]},thick,black!50!green] (n12) -- (n22);
+                \path [draw,->,-{Latex[length=3mm]},thick,black!50!green] (n13) -- (n23);
+                \path [draw,->,-{Latex[length=3mm]},thick,black!50!green] (n23) -- (n33);
+            \end{scope}
+        \end{tikzpicture}
+    \end{center}
+
+    \item Крім руху на одну плиту праворуч, можна перестрибувати, проте лише на ту саму літеру. Наприклад, з літери |a| можна перестрибнути на будь-яку іншу літеру |a| за умови, що ми цим ходом просунемося правіше.
+
+    \begin{center}
+        \begin{tikzpicture}
+            \begin{scope}[every node/.style={basic}]
+                \draw[step=1cm,gray,very thin] (0,0) grid (3,3);
+                \node at (0.5,2.5) (n11) {|a|}; \node at (1.5,2.5) (n21) {|a|}; \node at (2.5,2.5) (n31) {|a|};
+                \node at (0.5,1.5) (n12) {|c|}; \node at (1.5,1.5) (n22) {|a|}; \node at (2.5,1.5) (n32) {|b|};
+                \node at (0.5,0.5) (n13) {|d|}; \node at (1.5,0.5) (n23) {|e|}; \node at (2.5,0.5) (n33) {|f|};
+
+                \path [draw,->,-{Latex[length=3mm]},thick,black!50!green] (n11) -- (n21);
+                \path [draw,->,-{Latex[length=3mm]},thick,black!50!green] (n11) -- (n22);
+                \path [draw,->,-{Latex[length=3mm]},thick,black!50!green] (n11) edge[bend left] node {} (n31);
+                \path [draw,->,-{Latex[length=3mm]},thick,black!50!green] (n21) -- (n31);
+                \path [draw,->,-{Latex[length=3mm]},thick,black!50!green] (n22) -- (n31);
+                \path [draw,->,-{Latex[length=3mm]},thick,red] (n11) edge[bend right] node [cross out,draw,-]{} (n33);
+            \end{scope}
+        \end{tikzpicture}
+    \end{center}
+
+\end{enumerate}
+
+Для заданого коридору, підрахуйте, скільки всього існує способів пройти його успішно.
+
+\subsection*{Вхідні дані}
+
+Вхідний файл |ijones.in| складається з \(H + 1\) рядків.
+\begin{itemize}
+    \item Перший рядок містить два числа \(W\) і \(H\), розділені пробілом: \(W\) --- ширина коридору, \(H\) --- висота коридору, \(1 \leq W, H \leq 2000\).
+    \item Кожен з наступних \(H\) рядків містить слово довжиною \(W\) символів, яке складається з малих латинських літер від |a| до |z|.
+\end{itemize}
+
+Кодування файлу --- UTF-8 (without BOM).
+
+
+\subsection*{Вихідні дані}
+
+Вихідний файл |ijones.out| повинен містити одне ціле число --- кількість різних шляхів для виходу з коридору.
+
+
+\pagebreak
+
+
+\subsubsection*{Приклад 1}
+
+\textbf{\code{ijones.in}}
+
+\begin{codeblock}
+3 3
+aaa
+cab
+def
+\end{codeblock}
+
+\textbf{\code{ijones.out}}
+
+\begin{codeblock}
+5
+\end{codeblock}
+
+\emph{Пояснення:} Існує 3 варіанти обходу, якщо починати з літери |a|, і по одному варіанту, якщо починати з літери |c| або |d|.
+
+
+\subsubsection*{Приклад 2}
+
+\textbf{\code{ijones.in}}
+
+\begin{codeblock}
+10 1
+abcdefaghi
+\end{codeblock}
+
+\textbf{\code{ijones.out}}
+
+\begin{codeblock}
+2
+\end{codeblock}
+
+
+\subsubsection*{Приклад 3}
+
+\textbf{\code{ijones.in}}
+
+\begin{codeblock}
+7 6
+aaaaaaa
+aaaaaaa
+aaaaaaa
+aaaaaaa
+aaaaaaa
+aaaaaaa
+\end{codeblock}
+
+\textbf{\code{ijones.out}}
+
+\begin{codeblock}
+201684
+\end{codeblock}
+
+
+\end{document}
