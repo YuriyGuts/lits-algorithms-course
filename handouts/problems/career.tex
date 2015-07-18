@@ -1,0 +1,144 @@
+\documentclass[12pt,a4paper]{article}
+
+\usepackage{tikz}
+
+\usetikzlibrary{arrows.meta}
+\usetikzlibrary{shapes.misc}
+
+\input{../include/language.tex}
+\input{../include/star-rating.tex}
+\input{../include/styles.tex}
+\input{overrides/style-problems.tex}
+
+\tikzset{
+    basic/.style  = {draw, text width=20pt, circle, align=center}
+}
+
+\begin{document}
+
+\section*{Кар’єра \hfill \fivestarrating{2}}
+
+
+\subsection*{Код задачі: \code{CAREER}}
+
+Ви хочете зробити кар’єру у великій корпорації, яка має складну ієрархічну структуру та багато посад.
+Проте, читаючи відгуки працівників на GlassDoor, ви дізнаєтеся, що різні посади в цій компанії приносять зовсім різну кількість корисного досвіду, тому є сенс ретельно обирати, на яких посадах ви хочете працювати.
+
+Організаційна структура компанії має форму піраміди, де вищий рівень має рівно на 1 посаду менше, ніж нижчий.
+Досвід, який можна здобути на кожній посаді, а також способи підвищення вказані на схемі:
+
+\begin{center}
+    \begin{tikzpicture}
+    \begin{scope}[every node/.style={basic}]
+    \node                                                  (level1-1) {4};
+    \node [below of = level1-1,xshift=-30pt,yshift=-20pt]  (level2-1) {3};
+    \node [below of = level1-1,xshift= 30pt,yshift=-20pt]  (level2-2) {1};
+    \node [below of = level2-1,xshift=-30pt,yshift=-20pt]  (level3-1) {2};
+    \node [below of = level2-1,xshift= 30pt,yshift=-20pt]  (level3-2) {1};
+    \node [below of = level2-2,xshift= 30pt,yshift=-20pt]  (level3-3) {5};
+    \node [below of = level3-1,xshift=-30pt,yshift=-20pt]  (level4-1) {1};
+    \node [below of = level3-1,xshift= 30pt,yshift=-20pt]  (level4-2) {3};
+    \node [below of = level3-3,xshift=-30pt,yshift=-20pt]  (level4-3) {2};
+    \node [below of = level3-3,xshift= 30pt,yshift=-20pt]  (level4-4) {1};
+
+    \path [draw,->,thick,-{Latex[length=2.5mm]}] (level4-4) -- (level3-3);
+    \path [draw,->,thick,-{Latex[length=2.5mm]}] (level4-3) -- (level3-3);
+    \path [draw,->,thick,-{Latex[length=2.5mm]}] (level4-3) -- (level3-2);
+    \path [draw,->,thick,-{Latex[length=2.5mm]}] (level4-2) -- (level3-2);
+    \path [draw,->,thick,-{Latex[length=2.5mm]}] (level4-2) -- (level3-1);
+    \path [draw,->,thick,-{Latex[length=2.5mm]}] (level4-1) -- (level3-1);
+    \path [draw,->,thick,-{Latex[length=2.5mm]}] (level3-3) -- (level2-2);
+    \path [draw,->,thick,-{Latex[length=2.5mm]}] (level3-2) -- (level2-2);
+    \path [draw,->,thick,-{Latex[length=2.5mm]}] (level3-2) -- (level2-1);
+    \path [draw,->,thick,-{Latex[length=2.5mm]}] (level3-1) -- (level2-1);
+    \path [draw,->,thick,-{Latex[length=2.5mm]}] (level2-2) -- (level1-1);
+    \path [draw,->,thick,-{Latex[length=2.5mm]}] (level2-1) -- (level1-1);
+    \end{scope}
+
+    \end{tikzpicture}
+\end{center}
+
+Працівник може бути переведений тільки на вищу посаду (з вищої на нижчу рухатись не дозволяється).
+
+Знаючи досвід, який можна здобути на кожній посаді в компанії, визначте максимальну суму досвіду, яку ви можете здобути, почавши працювати на найнижчому рівні.
+
+
+\subsection*{Вхідні дані}
+
+Вхідний файл |career.in| складається з \(L + 1\) рядків.
+
+\begin{itemize}
+    \item Перший рядок містить \(L\) --- кількість організаційних рівнів в компанії.
+
+          \(1 \leq L \leq 1000\)
+
+    \item Наступні \(L\) рядків містять \(1, 2, 3, ..., L-2, L-1, L\) натуральних чисел \(E\) --- досвід для кожної посади на даному рівні.
+
+          \(1 \leq E < 10000\)
+\end{itemize}
+
+
+\subsection*{Вихідні дані}
+
+Вихідний файл |career.out| повинен містити одне ціле число --- максимальний сумарний досвід, який можливо здобути в цій компанії.
+
+
+\pagebreak
+
+
+\subsubsection*{Приклад 1}
+
+\textbf{\code{career.in}}
+
+\begin{codeblock}
+4
+4
+3 1
+2 1 5
+1 3 2 1
+\end{codeblock}
+
+\textbf{\code{career.out}}
+
+\begin{codeblock}
+12
+\end{codeblock}
+
+
+\subsubsection*{Приклад 2}
+
+\textbf{\code{career.in}}
+
+\begin{codeblock}
+1
+9999
+\end{codeblock}
+
+\textbf{\code{career.out}}
+
+\begin{codeblock}
+9999
+\end{codeblock}
+
+
+\subsubsection*{Приклад 3}
+
+\textbf{\code{career.in}}
+
+\begin{codeblock}
+5
+0
+1 1
+0 0 0
+1 1 1 1
+0 1 0 1 0
+\end{codeblock}
+
+\textbf{\code{career.out}}
+
+\begin{codeblock}
+3
+\end{codeblock}
+
+
+\end{document}
