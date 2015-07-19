@@ -76,6 +76,8 @@
                 \path [draw,->,-{Latex[length=3mm]},thick,black!50!green] (n12) -- (n22);
                 \path [draw,->,-{Latex[length=3mm]},thick,black!50!green] (n13) -- (n23);
                 \path [draw,->,-{Latex[length=3mm]},thick,black!50!green] (n23) -- (n33);
+                \path [draw,->,-{Latex[length=3mm]},thick,red] (n12) --node[cross out,draw,-]{} (n21);
+                \path [draw,->,-{Latex[length=3mm]},thick,red] (n13) --node[cross out,draw,-]{} (n22);
             \end{scope}
         \end{tikzpicture}
     \end{center}
