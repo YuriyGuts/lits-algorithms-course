@@ -4,39 +4,38 @@ import random
 
 class QuickSortAlgorithm(SortingAlgorithm):
     def sort(self, array):
-        self.shuffle(array)
-        self.quick_sort_recursive(array, 0, len(array) - 1)
+        random.shuffle(array)
+        self.quicksort_recursive(array, 0, len(array) - 1)
 
-    def shuffle(self, array):
-        n = len(array)
-        for i in range(0, n - 2):
-            random_item_index = random.randint(i, n - 1)
-            self.swap(array, i, random_item_index)
+    def quicksort_recursive(self, array, low, high):
+        if high <= low:
+            return
 
-    def quick_sort_recursive(self, array, left, right):
-        pivot = self.get_pivot(array, left, right)
-        left_write_pos = left
-        right_write_pos = right
+        pivot_pos = self.partition(array, low, high)
+        self.quicksort_recursive(array, low, pivot_pos - 1)
+        self.quicksort_recursive(array, pivot_pos + 1, high)
 
-        while left_write_pos <= right_write_pos:
+    def partition(self, array, low, high):
+        left = low + 1
+        right = high
 
-            while self.compare(array[left_write_pos], pivot):
-                left_write_pos += 1
+        pivot = array[low]
 
-            while self.compare(pivot, array[right_write_pos]):
-                right_write_pos -= 1
+        while True:
+            while not self.compare(pivot, array[left]):
+                if left == high:
+                    break
+                left += 1
 
-            if left_write_pos <= right_write_pos:
-                self.swap(array, left_write_pos, right_write_pos)
-                left_write_pos += 1
-                right_write_pos -= 1
+            while not self.compare(array[right], pivot):
+                if right == low:
+                    break
+                right -= 1
 
-        if left < left_write_pos - 1:
-            self.quick_sort_recursive(array, left, left_write_pos - 1)
+            if left >= right:
+                break
 
-        if left_write_pos < right:
-            self.quick_sort_recursive(array, left_write_pos, right)
+            self.swap(array, left, right)
 
-    def get_pivot(self, array, left, right):
-        # Assuming the array is already shuffled
-        return array[left]
+        self.swap(array, low, right)
+        return right
