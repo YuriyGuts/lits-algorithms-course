@@ -2,24 +2,34 @@ import random
 
 
 def main():
-    array = generate_random_array(50)
-    print array
-    stat = find_k_order_statistic(array, 10)
-    print array[stat]
+    array = generate_random_array(size=50, max_value=100)
+    k = 5
+    stat = find_k_order_statistic(array, k)
+
+    print "Array:", array
+    print "{0}-th order statistic: {1}".format(k, stat)
+    print "Just to check - sorted array:", sorted(array)
 
 
-def generate_random_array(size):
-    return [random.randint(0, 100) for _ in range(0, size)]
+def generate_random_array(size, max_value):
+    return [random.randint(0, max_value) for _ in range(0, size)]
 
 
 def find_k_order_statistic(array, k):
-    random.shuffle(array)
-    return find_k_order_statistic_recursive(array, k, 0, len(array) - 1)
+    array_copy = list(array)
+    random.shuffle(array_copy)
+    return find_k_order_statistic_recursive(array_copy, k, 0, len(array_copy) - 1)
 
 
 def find_k_order_statistic_recursive(array, k, low, high):
-    if high <= low:
-        return low
+    # The trick of the Randomized Selection algorithm is relying
+    # on the QuickSort partitioning function to find the k-order statistic.
+    #
+    # If the partitioning function says that the pivot is now at position k,
+    # then the pivot IS the statistic and we'll return it.
+    # Otherwise, we'll look to the left or to the right from the pivot.
+    if high < low:
+        return array[low]
 
     pivot_pos = partition(array, low, high)
     if pivot_pos < k - 1:
@@ -29,7 +39,8 @@ def find_k_order_statistic_recursive(array, k, low, high):
 
 
 def partition(array, low, high):
-    left = low + 1
+    # The partitioning function is the same as in QuickSort.
+    left = min(low + 1, high)
     right = high
 
     pivot = array[low]
