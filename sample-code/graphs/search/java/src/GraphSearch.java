@@ -80,11 +80,11 @@ public class GraphSearch {
                 continue;
             }
 
-            // Otherwise, marking it as visited so we that won't analyze it anymore.
+            // Otherwise, marking it as visited so that we won't analyze it anymore.
             isVisited[currentVertex.getLabel()] = true;
 
             // Getting all adjacent vertices which haven't been visited yet.
-            // It's only a matter of traversing the outboundEdges list and getting the end_vertex for each.
+            // It's only a matter of traversing the outboundEdges list and getting endVertex for each.
             List<Vertex> unvisitedNeighbors = new ArrayList<>();
             for (Edge outboundEdge: currentVertex.getOutboundEdges()) {
                 if (!isVisited[outboundEdge.getEndVertex().getLabel()]) {

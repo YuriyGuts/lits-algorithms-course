@@ -50,11 +50,11 @@ def bfs(graph, start_vertex):
         if visited[current_vertex.label]:
             continue
 
-        # Otherwise, marking it as visited so we that won't analyze it anymore.
+        # Otherwise, marking it as visited so that we won't analyze it anymore.
         visited[current_vertex.label] = True
 
         # Getting all adjacent vertices which haven't been visited yet.
-        # It's only a matter of traversing the outbound_edges list and getting the end_vertex for each.
+        # It's only a matter of traversing the outbound_edges list and getting end_vertex for each.
         neighbors = [edge.end_vertex
                      for edge in current_vertex.outbound_edges
                      if not visited[edge.end_vertex.label]]
