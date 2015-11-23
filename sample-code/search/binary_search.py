@@ -65,7 +65,7 @@ def binary_search_leftmost(sorted_haystack, needle):
 
 
 def binary_search_rightmost(sorted_haystack, needle):
-    # A modification of the binary search algorithm that finds the leftmost element among equals.
+    # A modification of the binary search algorithm that finds the rightmost element among equals.
     # E.g., for [0, 1, 1, 2, 2, 2, 3, 3] the element '2' will be found at position 5.
     left = 0
     right = len(sorted_haystack) - 1
