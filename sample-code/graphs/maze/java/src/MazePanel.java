@@ -27,7 +27,7 @@ public class MazePanel extends JPanel {
 
     @Override
     public Dimension getPreferredSize() {
-        return new Dimension(maze.getWidth() * mazeCellSize, maze.getHeight() * mazeCellSize);
+        return new Dimension(maze.getWidth() * mazeCellSize + 1, maze.getHeight() * mazeCellSize + 1);
     }
 
     @Override

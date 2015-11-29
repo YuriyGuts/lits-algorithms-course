@@ -1,4 +1,5 @@
 import javax.swing.*;
+import javax.swing.border.Border;
 import java.awt.*;
 import java.lang.reflect.InvocationTargetException;
 
@@ -39,12 +40,14 @@ public class Program {
         goButton.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         containerPanel.add(goButton);
+        containerPanel.add(Box.createRigidArea(new Dimension(0, 10)));
         containerPanel.add(mazePanel);
 
         window.pack();
         window.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         window.getContentPane().add(containerPanel);
         window.setSize(window.getPreferredSize());
+        window.setResizable(false);
         window.setLocationRelativeTo(null);
         window.setVisible(true);
     }
