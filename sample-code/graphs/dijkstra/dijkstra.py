@@ -43,8 +43,8 @@ def dijkstra(graph, start_vertex):
     # and the start vertex will have the shortest distance to itself equal to 0.
     INFINITY = 10 ** 10
     distances = [INFINITY for _ in graph.vertices]
-    shortest_path_predecessor = [None for _ in graph.vertices]
     distances[start_vertex.label] = 0
+    path_predecessors = [None for _ in graph.vertices]
 
     # Visiting every vertex in the graph...
     visit_list = [vertex for vertex in graph.vertices]
@@ -72,11 +72,11 @@ def dijkstra(graph, start_vertex):
             if alternative_distance < distances[neighbor_vertex.label]:
                 # If we have indeed found a better path, remembering the new distance and predecessor.
                 distances[neighbor_vertex.label] = alternative_distance
-                shortest_path_predecessor[neighbor_vertex.label] = shortest_distance_vertex.label
+                path_predecessors[neighbor_vertex.label] = shortest_distance_vertex.label
 
     # We can avoid the shortest_path_predecessor array completely, but we'll return it in case there's
     # a need to output the actual PATH instead of just the shortest distances.
-    return distances, shortest_path_predecessor
+    return distances, path_predecessors
 
 
 def reconstruct_shortest_path(predecessors, start_vertex, end_vertex):
