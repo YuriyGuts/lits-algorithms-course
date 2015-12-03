@@ -2,18 +2,17 @@ import heapq
 
 
 def main():
-    graph = read_graph_from_file("graph02.txt")
-    distances, shortest_path_predecessor = dijkstra(graph, "a")
+    # An advanced version of Dijkstra's shortest path algorithm that uses heaps to speed up its lookups.
+    # Also, to make things more universal, we use string labels here instead of just integers.
+    graph = read_graph_from_file("string_weighted_graph_01.txt")
+    start_vertex = graph.vertices["a"]
+    distances, predecessors = dijkstra(graph, start_vertex)
 
+    # Print distances and routes.
     for label, distance in sorted(distances.iteritems()):
-        path = label
-        previous_vertex = shortest_path_predecessor[label]
-
-        while previous_vertex is not None:
-            path = "%s -> %s" % (previous_vertex, path)
-            previous_vertex = shortest_path_predecessor[previous_vertex]
-
-        print "%s: %d  (%s)" % (label, distance, path)
+        path = reconstruct_shortest_path(predecessors, start_vertex, label)
+        formatted_path = " -> ".join([str(label) for label in path])
+        print "{label}: {distance}\t({formatted_path})".format(**locals())
 
 
 def read_graph_from_file(filename):
@@ -55,10 +54,10 @@ def dijkstra(graph, start_vertex):
     # and the start vertex will have the shortest distance to itself equal to 0.
     INFINITY = 10 ** 15
     distances = {vertex: INFINITY for vertex in graph.vertices}
-    distances[start_vertex] = 0
+    distances[start_vertex.label] = 0
 
-    path_predecessors = {start_vertex: None}
-    heap = [[start_vertex, 0]]
+    path_predecessors = {start_vertex.label: None}
+    heap = [[start_vertex.label, 0]]
 
     while len(heap) > 0:
         # Picking the vertex with the smallest known distance so far.
@@ -71,15 +70,27 @@ def dijkstra(graph, start_vertex):
         # For each adjacent vertex v, check if the path from the current vertex would be more efficient
         # than the one we've known before. I.e., if distance[current] + weight(current->v) < distance[v].
         for edge in shortest_distance_vertex.outbound_edges:
+            neighbor_vertex = edge.end_vertex
             alternative_distance = distances[shortest_distance_vertex.label] + edge.weight
-            if alternative_distance < distances[edge.end_vertex.label]:
+            if alternative_distance < distances[neighbor_vertex.label]:
                 # If we have indeed found a better path, remembering the new distance and predecessor.
-                distances[edge.end_vertex.label] = alternative_distance
-                path_predecessors[edge.end_vertex.label] = shortest_distance_vertex.label
+                distances[neighbor_vertex.label] = alternative_distance
+                path_predecessors[neighbor_vertex.label] = shortest_distance_vertex.label
                 # Pushing the new distance to the heap.
-                heapq.heappush(heap, [edge.end_vertex.label, alternative_distance])
+                heapq.heappush(heap, [neighbor_vertex.label, alternative_distance])
 
     return distances, path_predecessors
+
+
+def reconstruct_shortest_path(predecessors, start_vertex, end_vertex):
+    path = [end_vertex]
+    predecessor = predecessors[end_vertex]
+
+    while predecessor != start_vertex and predecessor is not None:
+        path.insert(0, predecessor)
+        predecessor = predecessors[predecessor]
+
+    return path
 
 
 class Vertex:

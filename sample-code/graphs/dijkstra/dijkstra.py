@@ -1,16 +1,13 @@
 def main():
-    graph = read_graph_from_file("graph01.txt")
-    distances, shortest_path_predecessor = dijkstra(graph, graph.vertices[0])
+    graph = read_graph_from_file("weighted_graph_01.txt")
+    start_vertex = graph.vertices[0]
+    distances, predecessors = dijkstra(graph, start_vertex)
 
+    # Print distances and routes.
     for index, distance in enumerate(distances):
-        path = str(index)
-        previous_vertex = shortest_path_predecessor[index]
-
-        while previous_vertex is not None:
-            path = "%d -> %s" % (previous_vertex, path)
-            previous_vertex = shortest_path_predecessor[previous_vertex]
-
-        print "%d: %d  (%s)" % (index, distance, path)
+        path = reconstruct_shortest_path(predecessors, start_vertex, index)
+        formatted_path = " -> ".join([str(label) for label in path])
+        print "{index}: {distance}\t({formatted_path})".format(**locals())
 
 
 def read_graph_from_file(filename):
@@ -56,7 +53,7 @@ def dijkstra(graph, start_vertex):
         # ...but selecting the vertex with the shortest known distance every time.
         #
         # We can avoid doing the linear-time lookup every time by using a Fibonacci Heap instead,
-        # thus reducing the complexity to O(E log V).
+        # thus reducing the complexity from O(V ^ 2) to O(E + V log V).
         shortest_distance_vertex = visit_list[0]
         shortest_distance_index = 0
 
@@ -70,15 +67,27 @@ def dijkstra(graph, start_vertex):
         # For each adjacent vertex v, check if the path from the current vertex would be more efficient
         # than the one we've known before. I.e., if distance[current] + weight(current->v) < distance[v].
         for edge in shortest_distance_vertex.outbound_edges:
+            neighbor_vertex = edge.end_vertex
             alternative_distance = distances[shortest_distance_vertex.label] + edge.weight
-            if alternative_distance < distances[edge.end_vertex.label]:
+            if alternative_distance < distances[neighbor_vertex.label]:
                 # If we have indeed found a better path, remembering the new distance and predecessor.
-                distances[edge.end_vertex.label] = alternative_distance
-                shortest_path_predecessor[edge.end_vertex.label] = shortest_distance_vertex.label
+                distances[neighbor_vertex.label] = alternative_distance
+                shortest_path_predecessor[neighbor_vertex.label] = shortest_distance_vertex.label
 
     # We can avoid the shortest_path_predecessor array completely, but we'll return it in case there's
     # a need to output the actual PATH instead of just the shortest distances.
     return distances, shortest_path_predecessor
+
+
+def reconstruct_shortest_path(predecessors, start_vertex, end_vertex):
+    path = [end_vertex]
+    predecessor = predecessors[end_vertex]
+
+    while predecessor != start_vertex and predecessor is not None:
+        path.insert(0, predecessor)
+        predecessor = predecessors[predecessor]
+
+    return path
 
 
 class Vertex:
