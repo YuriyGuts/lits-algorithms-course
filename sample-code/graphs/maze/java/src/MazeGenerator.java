@@ -21,15 +21,15 @@ public class MazeGenerator {
         // But in order to generate a maze, we'll also remember the cell we came from.
         // Whenever we process a new cell, we'll break the wall between the current cell
         // and the cell we came from. Therefore, we'll need to store multiple values in one stack item.
-        // We'll wrap these (currentCell, previousCell) pairs in the MazeTraveralItem class.
-        Stack<MazeTraversalItem> stack = new Stack<>();
-        stack.push(new MazeTraversalItem(maze.getCellByCoordinate(0, 0), null));
+        // We'll wrap these (currentCell, previousCell) pairs in the MazeGenerationTraversalItem class.
+        Stack<MazeGenerationTraversalItem> stack = new Stack<>();
+        stack.push(new MazeGenerationTraversalItem(maze.getCellByCoordinate(0, 0), null));
 
         boolean[][] visited = new boolean[maze.getHeight()][maze.getWidth()];
 
         while (!stack.empty()) {
             // Retrieve another pair of cells from the stack.
-            MazeTraversalItem traversalItem = stack.pop();
+            MazeGenerationTraversalItem traversalItem = stack.pop();
             Cell currentCell = traversalItem.getCurrentCell();
             Cell previousCell = traversalItem.getPreviousCell();
 
@@ -52,10 +52,10 @@ public class MazeGenerator {
             }
 
             // Get all neighbors that are within the bounds of the maze and have all 4 walls intact.
-            List<MazeTraversalItem> nextTraversalItems = new ArrayList<>();
+            List<MazeGenerationTraversalItem> nextTraversalItems = new ArrayList<>();
             for (Cell neighborCell: maze.getAdjacentCells(currentCell)) {
                 if (!visited[neighborCell.getY()][neighborCell.getX()] && neighborCell.hasAllWalls()) {
-                    nextTraversalItems.add(new MazeTraversalItem(neighborCell, currentCell));
+                    nextTraversalItems.add(new MazeGenerationTraversalItem(neighborCell, currentCell));
                 }
             }
 

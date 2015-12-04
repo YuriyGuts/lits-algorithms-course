@@ -1,10 +1,10 @@
-public class MazeTraversalItem {
+public class MazeGenerationTraversalItem {
 
     private Cell currentCell;
 
     private Cell previousCell;
 
-    public MazeTraversalItem(Cell currentCell, Cell previousCell) {
+    public MazeGenerationTraversalItem(Cell currentCell, Cell previousCell) {
         this.currentCell = currentCell;
         this.previousCell = previousCell;
     }

@@ -1,5 +1,4 @@
 import javax.swing.*;
-import javax.swing.border.Border;
 import java.awt.*;
 import java.lang.reflect.InvocationTargetException;
 
@@ -11,6 +10,7 @@ public class Program {
     private static final long animationDelayMillis = 10;
 
     private static MazeGenerator mazeGenerator;
+    private static MazeSolver mazeSolver;
 
     private static JFrame window;
     private static MazePanel mazePanel;
@@ -19,13 +19,17 @@ public class Program {
     public static void main(String[] args)
     {
         mazeGenerator = new MazeGenerator(mazeWidth, mazeHeight);
+        mazeSolver = new MazeSolver();
         SwingUtilities.invokeLater(Program::createAndShowGUI);
     }
 
     private static void createAndShowGUI()
     {
-        mazePanel = new MazePanel(mazeCellSize);
-        mazePanel.setMaze(mazeGenerator.getMaze());
+        try {
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        } catch (ClassNotFoundException | InstantiationException | UnsupportedLookAndFeelException | IllegalAccessException e) {
+            e.printStackTrace();
+        }
 
         JFrame.setDefaultLookAndFeelDecorated(true);
         window = new JFrame("Maze Algorithms");
@@ -39,32 +43,57 @@ public class Program {
         goButton.setActionCommand("Go");
         goButton.setAlignmentX(Component.CENTER_ALIGNMENT);
 
+        mazePanel = new MazePanel(mazeWidth, mazeHeight, mazeCellSize);
+
         containerPanel.add(goButton);
         containerPanel.add(Box.createRigidArea(new Dimension(0, 10)));
         containerPanel.add(mazePanel);
 
+        window.setResizable(false);
+        window.getContentPane().add(containerPanel);
         window.pack();
         window.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        window.getContentPane().add(containerPanel);
         window.setSize(window.getPreferredSize());
-        window.setResizable(false);
         window.setLocationRelativeTo(null);
         window.setVisible(true);
     }
 
     private static void onGoButtonClick() {
         mazeGenerator = new MazeGenerator(mazeWidth, mazeHeight);
-        mazePanel.setMaze(mazeGenerator.getMaze());
+        mazePanel.clear();
 
         new Thread(() -> {
             SwingUtilities.invokeLater(() -> goButton.setEnabled(false));
-            mazeGenerator.generate(Program::onCellCreated);
+            Maze maze = mazeGenerator.generate(Program::onCellCreated);
+            MazeSolution solution = mazeSolver.solve(maze, Program::onCellSolved, Program::onExitPathUpdated);
             SwingUtilities.invokeLater(() -> goButton.setEnabled(true));
         }).start();
     }
 
     private static void onCellCreated(CellCreatedEvent e) {
+        executeWithAnimationDelay(() -> {
+            mazePanel.addGeneratedCell(e.getTraversalItem().getPreviousCell());
+            mazePanel.addGeneratedCell(e.getTraversalItem().getCurrentCell());
+        });
+    }
+
+    private static void onCellSolved(CellSolvedEvent e) {
+        executeWithAnimationDelay(() -> {
+            Cell cell = e.getTraversalItem().getCell();
+            int pathLength = e.getTraversalItem().getMinPathLength();
+            mazePanel.addSolvedCell(cell, pathLength);
+        });
+    }
+
+    private static void onExitPathUpdated(ExitPathUpdatedEvent e) {
+        executeWithAnimationDelay(() -> {
+            mazePanel.addExitPathCell(e.getCell());
+        });
+    }
+
+    private static void executeWithAnimationDelay(Runnable function) {
         try {
+            function.run();
             Thread.sleep(animationDelayMillis);
             SwingUtilities.invokeAndWait(() -> window.repaint());
         } catch (InterruptedException | InvocationTargetException ex) {

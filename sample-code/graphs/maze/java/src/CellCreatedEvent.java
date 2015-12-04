@@ -1,12 +1,12 @@
 public class CellCreatedEvent {
 
-    private MazeTraversalItem traversalItem;
+    private MazeGenerationTraversalItem traversalItem;
 
-    public CellCreatedEvent(MazeTraversalItem traversalItem) {
+    public CellCreatedEvent(MazeGenerationTraversalItem traversalItem) {
         this.traversalItem = traversalItem;
     }
 
-    public MazeTraversalItem getTraversalItem() {
+    public MazeGenerationTraversalItem getTraversalItem() {
         return traversalItem;
     }
 }
