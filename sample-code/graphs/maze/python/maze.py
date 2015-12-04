@@ -262,11 +262,11 @@ class Maze:
         cell1.break_wall(cell1_neighbor_index)
         cell2.break_wall(cell2_neighbor_index)
 
-    def exists_path_between_cells(self, cell1, cell2):
+    def exists_wall_between_cells(self, cell1, cell2):
         y_diff = cell1.y - cell2.y
         x_diff = cell1.x - cell2.x
         wall_index = self.steps_to_reach_neighbors.index((y_diff, x_diff))
-        return not cell2.has_wall(wall_index)
+        return cell2.has_wall(wall_index)
 
     def get_adjacent_cells(self, cell):
         return list([
@@ -281,7 +281,7 @@ class Maze:
             neighbor
             for neighbor in self.get_adjacent_cells(cell)
             # ...as long as there's no wall between us and the neighbor.
-            if self.exists_path_between_cells(cell, neighbor)
+            if not self.exists_wall_between_cells(cell, neighbor)
         ]
 
 
