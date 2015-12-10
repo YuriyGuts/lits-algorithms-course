@@ -1,6 +1,13 @@
+import random
+
+
 def main():
     graph = read_graph_from_file("graph01.txt")
-    print get_topological_order(graph)
+    try:
+        for vertex in get_topological_order(graph):
+            print vertex.label,
+    except NotDirectedAcyclicGraphError:
+        print "The graph is not a directed acyclic graph (DAG)."
 
 
 def read_graph_from_file(filename):
@@ -25,45 +32,60 @@ def read_graph_from_file(filename):
 
 
 def get_topological_order(graph):
-    # Find all vertices that don't have inbound edges, then run
-    # the (almost) usual DFS with those vertices initially in the stack.
-    return topological_dfs(graph, start_vertices=get_vertices_without_inbound_edges(graph))
+    return tarjan_dfs(graph, randomize_result=True)
 
 
-def get_vertices_without_inbound_edges(graph):
-    have_inbounds = {vertex: False for vertex in graph.vertices}
-    for edge in graph.edges:
-        have_inbounds[edge.end_vertex] = True
-    return [vertex for vertex in have_inbounds.keys() if not have_inbounds[vertex]]
+def tarjan_dfs(graph, randomize_result=False):
+    # Instead of keeping a boolean visited[] array, our visits will have 3 states.
+    NOT_VISITED = 0
+    VISITED = 1
+    VISITED_AND_RESOLVED = 2
 
+    topological_order = []
+    visited_status = [NOT_VISITED for vertex in graph.vertices]
 
-def topological_dfs(graph, start_vertices):
-    result = []
+    # A recursive implementation of DFS.
+    def visit(vertex):
+        # We came across an unresolved dependency. It means there's a cycle in the graph.
+        if visited_status[vertex.label] == VISITED:
+            raise NotDirectedAcyclicGraphError
 
-    stack = []
-    stack.extend(start_vertices)
-    visited = [False for _ in graph.vertices]
+        if visited_status[vertex.label] == NOT_VISITED:
+            visited_status[vertex.label] = VISITED
 
-    while len(stack) > 0:
-        # Read the last vertex from the stack, but don't remove it.
-        current_vertex = stack[-1]
+            # Getting all dependencies of the current vertex.
+            neighbors = [edge.end_vertex for edge in vertex.outbound_edges]
 
-        visited[current_vertex.label] = True
-        unvisited_neighbors = [
-            edge.end_vertex
-            for edge in current_vertex.outbound_edges
-            if not visited[edge.end_vertex.label]
+            if randomize_result:
+                random.shuffle(neighbors)
+
+            # Trying to recursively satisfy each dependency.
+            for neighbor in neighbors:
+                visit(neighbor)
+
+            # Marking this vertex as resolved and adding it to the order.
+            visited_status[vertex.label] = VISITED_AND_RESOLVED
+            topological_order.append(vertex)
+
+    # Visit any unvisited vertex until there are no unvisited vertices left.
+    while True:
+        unvisited_vertices = [
+            vertex
+            for vertex in graph.vertices
+            if visited_status[vertex.label] == NOT_VISITED
         ]
 
-        # If all neighbors have already been discovered (or don't exist at all),
-        # push the current vertex to the results of the topological sorting.
-        if len(unvisited_neighbors) == 0:
-            result.append(current_vertex.label)
-            stack.pop()
+        if len(unvisited_vertices) == 0:
+            return topological_order
+        else:
+            if randomize_result:
+                random.shuffle(unvisited_vertices)
+            visit(unvisited_vertices[0])
 
-        stack.extend(unvisited_neighbors)
 
-    return result
+class NotDirectedAcyclicGraphError:
+    def __init__(self):
+        pass
 
 
 class Vertex:
