@@ -27,7 +27,7 @@ def read_graph_from_file(filename):
 def get_topological_order(graph):
     # Find all vertices that don't have inbound edges, then run
     # the (almost) usual DFS with those vertices initially in the stack.
-    return dfs(graph, get_vertices_without_inbound_edges(graph))
+    return topological_dfs(graph, start_vertices=get_vertices_without_inbound_edges(graph))
 
 
 def get_vertices_without_inbound_edges(graph):
@@ -37,7 +37,7 @@ def get_vertices_without_inbound_edges(graph):
     return [vertex for vertex in have_inbounds.keys() if not have_inbounds[vertex]]
 
 
-def dfs(graph, start_vertices):
+def topological_dfs(graph, start_vertices):
     result = []
 
     stack = []
@@ -49,17 +49,19 @@ def dfs(graph, start_vertices):
         current_vertex = stack[-1]
 
         visited[current_vertex.label] = True
-        neighbors = [edge.end_vertex
-                     for edge in current_vertex.outbound_edges
-                     if not visited[edge.end_vertex.label]]
+        unvisited_neighbors = [
+            edge.end_vertex
+            for edge in current_vertex.outbound_edges
+            if not visited[edge.end_vertex.label]
+        ]
 
         # If all neighbors have already been discovered (or don't exist at all),
         # push the current vertex to the results of the topological sorting.
-        if len(neighbors) == 0:
+        if len(unvisited_neighbors) == 0:
             result.append(current_vertex.label)
             stack.pop()
 
-        stack.extend(neighbors)
+        stack.extend(unvisited_neighbors)
 
     return result
 
