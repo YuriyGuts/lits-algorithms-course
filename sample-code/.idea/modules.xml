@@ -2,6 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/graphs/dijkstra/java/advanced/java-dijkstra-advanced.iml" filepath="$PROJECT_DIR$/graphs/dijkstra/java/advanced/java-dijkstra-advanced.iml" />
+      <module fileurl="file://$PROJECT_DIR$/graphs/dijkstra/java/basic/java-dijkstra-basic.iml" filepath="$PROJECT_DIR$/graphs/dijkstra/java/basic/java-dijkstra-basic.iml" />
       <module fileurl="file://$PROJECT_DIR$/graphs/search/java/java-graph-search.iml" filepath="$PROJECT_DIR$/graphs/search/java/java-graph-search.iml" />
       <module fileurl="file://$PROJECT_DIR$/graphs/maze/java/java-maze.iml" filepath="$PROJECT_DIR$/graphs/maze/java/java-maze.iml" />
       <module fileurl="file://$PROJECT_DIR$/sample-code.iml" filepath="$PROJECT_DIR$/sample-code.iml" />
