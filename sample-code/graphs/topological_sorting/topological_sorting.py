@@ -1,6 +1,3 @@
-import random
-
-
 def main():
     graph = read_graph_from_file("graph01.txt")
     try:
@@ -32,10 +29,10 @@ def read_graph_from_file(filename):
 
 
 def get_topological_order(graph):
-    return tarjan_dfs(graph, use_recursion=False, randomize_result=True)
+    return tarjan_dfs(graph, use_recursion=False)
 
 
-def tarjan_dfs(graph, use_recursion=True, randomize_result=False):
+def tarjan_dfs(graph, use_recursion=True):
     # Instead of keeping a boolean visited[] array, our visits will have 3 states.
     NOT_VISITED = 0
     VISITED = 1
@@ -43,6 +40,8 @@ def tarjan_dfs(graph, use_recursion=True, randomize_result=False):
 
     topological_order = []
     topological_order_set = set()
+
+    unvisited_vertices = set(graph.vertices)
     visited_status = [NOT_VISITED for vertex in graph.vertices]
 
     # A recursive, textbook implementation of Tarjan's DFS.
@@ -56,9 +55,6 @@ def tarjan_dfs(graph, use_recursion=True, randomize_result=False):
 
             # Getting all dependencies of the current vertex.
             neighbors = [edge.end_vertex for edge in vertex.outbound_edges]
-
-            if randomize_result:
-                random.shuffle(neighbors)
 
             # Trying to recursively satisfy each dependency.
             for neighbor in neighbors:
@@ -75,8 +71,10 @@ def tarjan_dfs(graph, use_recursion=True, randomize_result=False):
 
         while len(stack) > 0:
             vertex = stack.pop()
-            if visited_status[vertex.label] == NOT_VISITED:
-                visited_status[vertex.label] = VISITED
+
+            visited_status[vertex.label] = VISITED
+            if vertex in unvisited_vertices:
+                unvisited_vertices.remove(vertex)
 
             unvisited_neighbors = []
             for neighbor in [edge.end_vertex for edge in vertex.outbound_edges]:
@@ -99,8 +97,6 @@ def tarjan_dfs(graph, use_recursion=True, randomize_result=False):
                 # If there's something left to explore,
                 # leaving the vertex in the stack along with all its neighbors.
                 stack.append(vertex)
-                if randomize_result:
-                    random.shuffle(unvisited_neighbors)
                 stack.extend(unvisited_neighbors)
 
     # Using the stack-based implementation if the corresponding parameter was set.
@@ -108,18 +104,10 @@ def tarjan_dfs(graph, use_recursion=True, randomize_result=False):
 
     # Visit any unvisited vertex until there are no unvisited vertices left.
     while True:
-        unvisited_vertices = [
-            vertex
-            for vertex in graph.vertices
-            if visited_status[vertex.label] == NOT_VISITED
-        ]
-
         if len(unvisited_vertices) == 0:
             return topological_order
         else:
-            if randomize_result:
-                random.shuffle(unvisited_vertices)
-            dfs_implementation(unvisited_vertices[0])
+            dfs_implementation(next(iter(unvisited_vertices)))
 
 
 class NotDirectedAcyclicGraphError:
