@@ -29,7 +29,7 @@ def read_graph_from_file(filename):
 
 
 def get_topological_order(graph):
-    return tarjan_dfs(graph, use_recursion=False)
+    return tarjan_dfs(graph, use_recursion=True)
 
 
 def tarjan_dfs(graph, use_recursion=True):
@@ -51,6 +51,7 @@ def tarjan_dfs(graph, use_recursion=True):
             raise NotDirectedAcyclicGraphError
 
         if visited_status[vertex.label] == NOT_VISITED:
+            unvisited_vertices.remove(vertex)
             visited_status[vertex.label] = VISITED
 
             # Getting all dependencies of the current vertex.
@@ -103,11 +104,10 @@ def tarjan_dfs(graph, use_recursion=True):
     dfs_implementation = dfs_recursive if use_recursion else dfs_stack
 
     # Visit any unvisited vertex until there are no unvisited vertices left.
-    while True:
-        if len(unvisited_vertices) == 0:
-            return topological_order
-        else:
-            dfs_implementation(next(iter(unvisited_vertices)))
+    while len(unvisited_vertices) > 0:
+        dfs_implementation(next(iter(unvisited_vertices)))
+
+    return topological_order
 
 
 class NotDirectedAcyclicGraphError:
