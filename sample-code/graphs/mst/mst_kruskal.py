@@ -2,7 +2,7 @@ from union_find import ArrayUnionFind
 
 
 def main():
-    graph = read_graph_from_file("graph01.txt")
+    graph = read_graph_from_file("graph_int_labels_01.txt")
     mst_edges = mst_kruskal(graph)
     for edge in mst_edges:
         print edge

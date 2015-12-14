@@ -1,6 +1,11 @@
+import heapq
+
+
 def main():
-    graph = read_graph_from_file("graph01.txt")
-    mst_edges = mst_prim(graph)
+    graph = read_graph_from_file("graph_int_labels_facebook.txt")
+    mst_edges = mst_prim_heap(graph)
+
+    print "MST cost:", sum([edge.weight for edge in mst_edges])
     for edge in mst_edges:
         print edge
 
@@ -11,12 +16,18 @@ def read_graph_from_file(filename):
         vertex_count = int(input_file.readline())
         edge_count = int(input_file.readline())
 
-        vertices = [Vertex(index) for index in range(0, vertex_count)]
+        vertices = {}
         edges = []
 
         # The next 'edge_count' lines describe the edges: "start_vertex end_vertex weight".
         for i in range(0, edge_count):
-            start_vertex, end_vertex, weight = [int(param) for param in input_file.readline().split()]
+            start_vertex, end_vertex, weight = [param for param in input_file.readline().split()]
+            weight = int(weight)
+
+            if start_vertex not in vertices:
+                vertices[start_vertex] = Vertex(label=start_vertex)
+            if end_vertex not in vertices:
+                vertices[end_vertex] = Vertex(label=end_vertex)
 
             # Adding the edge to the list of outbound edges for the start vertex.
             edge = Edge(vertices[start_vertex], vertices[end_vertex], weight)
@@ -35,10 +46,12 @@ def read_graph_from_file(filename):
 
 def mst_prim(graph):
     result = []
-    already_belongs_to_mst = [False for _ in graph.vertices]
+    already_belongs_to_mst = {label: False for label in graph.vertices}
 
-    # Including an arbitrary vertex in the MST (the first one, in our case).
-    already_belongs_to_mst[0] = True
+    # Including an arbitrary vertex in the MST.
+    # It's safe to do so, because an MST must contain all vertices by definition.
+    random_label = graph.vertices.iterkeys().next()
+    already_belongs_to_mst[random_label] = True
 
     # The MST of a connected graph will always have V-1 edges.
     while len(result) < len(graph.vertices) - 1:
@@ -60,6 +73,41 @@ def mst_prim(graph):
     return result
 
 
+def mst_prim_heap(graph):
+    result = []
+    heap = []
+    already_belongs_to_mst = {label: False for label in graph.vertices}
+
+    # Including an arbitrary vertex in the MST.
+    # It's safe to do so, because an MST must contain all vertices by definition.
+    random_label = graph.vertices.iterkeys().next()
+    already_belongs_to_mst[random_label] = True
+    for edge in graph.vertices[random_label].outbound_edges:
+        heapq.heappush(heap, (edge.weight, edge))
+
+    # The MST of a connected graph will always have V-1 edges.
+    while len(result) < len(graph.vertices) - 1:
+        # Trying to extend our current MST with one more vertex.
+        # Selecting the cheapest edge with one end in the MST and the other not in the MST.
+        min_edge = None
+        while True:
+            min_weight, min_edge = heapq.heappop(heap)
+            if already_belongs_to_mst[min_edge.start_vertex.label] != already_belongs_to_mst[min_edge.end_vertex.label]:
+                break
+
+        vertex_to_add = min_edge.end_vertex if not already_belongs_to_mst[min_edge.end_vertex.label] else min_edge.start_vertex
+
+        # Adding this edge to the MST and marking the vertices at both ends as consumed.
+        result.append(min_edge)
+        for edge in vertex_to_add.outbound_edges:
+            heapq.heappush(heap, (edge.weight, edge))
+
+        already_belongs_to_mst[vertex_to_add.label] = True
+
+    # Return the list of edges that belong to the MST.
+    return result
+
+
 class Vertex:
     def __init__(self, label):
         self.label = label
@@ -76,7 +124,7 @@ class Edge:
         self.weight = weight
 
     def __str__(self):
-        return "%d ---%d---> %d" % (self.start_vertex.label, self.weight, self.end_vertex.label)
+        return "%s ---%d---> %s" % (self.start_vertex.label, self.weight, self.end_vertex.label)
 
 
 class Graph:

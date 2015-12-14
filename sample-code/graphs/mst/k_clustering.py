@@ -3,7 +3,7 @@ from union_find import ArrayUnionFind
 
 
 def main():
-    graph = read_graph_from_file("points01.txt")
+    graph = read_graph_from_file("graph_points_small.txt")
     clusters = k_clustering(graph, 3)
     for cluster in clusters:
         print cluster

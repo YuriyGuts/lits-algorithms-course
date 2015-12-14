@@ -1,0 +1,23 @@
+10
+17
+a b 3
+a f 2
+b c 17
+b d 16
+c d 8
+c i 18
+d e 11
+d i 4
+e f 1
+e g 6
+e h 5
+e i 10
+f g 7
+g h 15
+h i 12
+h j 13
+i j 9
+
+
+Visual representation of this graph and its MST:
+http://luc.devroye.org/1997notes/topic28/mst.gif
