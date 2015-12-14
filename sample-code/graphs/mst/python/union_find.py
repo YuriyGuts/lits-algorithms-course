@@ -48,10 +48,10 @@ class ArrayUnionFind:
         self.groups.remove(lesser_group)
         return self.find(value1)
 
-    def find(self, item1):
-        if self.items[item1] is None:
+    def find(self, item):
+        if self.items[item] is None:
             return None
-        return self.items[item1].group
+        return self.items[item].group
 
     def group_count(self):
         return len(self.groups)

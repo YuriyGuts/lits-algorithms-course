@@ -6,6 +6,7 @@
       <module fileurl="file://$PROJECT_DIR$/graphs/dijkstra/java/basic/java-dijkstra-basic.iml" filepath="$PROJECT_DIR$/graphs/dijkstra/java/basic/java-dijkstra-basic.iml" />
       <module fileurl="file://$PROJECT_DIR$/graphs/search/java/java-graph-search.iml" filepath="$PROJECT_DIR$/graphs/search/java/java-graph-search.iml" />
       <module fileurl="file://$PROJECT_DIR$/graphs/maze/java/java-maze.iml" filepath="$PROJECT_DIR$/graphs/maze/java/java-maze.iml" />
+      <module fileurl="file://$PROJECT_DIR$/graphs/mst/java/java-mst.iml" filepath="$PROJECT_DIR$/graphs/mst/java/java-mst.iml" />
       <module fileurl="file://$PROJECT_DIR$/graphs/topological_sorting/java/java-tarjan.iml" filepath="$PROJECT_DIR$/graphs/topological_sorting/java/java-tarjan.iml" />
       <module fileurl="file://$PROJECT_DIR$/sample-code.iml" filepath="$PROJECT_DIR$/sample-code.iml" />
     </modules>
