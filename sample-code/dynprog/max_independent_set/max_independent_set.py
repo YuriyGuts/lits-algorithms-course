@@ -1,7 +1,8 @@
 def main():
     weights = read_input("weights01.txt")
-    max_weight_sum = solve(weights)
-    write_output(None, max_weight_sum)
+    max_weight_sum, solutions = solve(weights)
+    items_to_include = reconstruct_solution(solutions)
+    write_output(weights, max_weight_sum, solutions, items_to_include)
 
 
 def read_input(filename):
@@ -29,16 +30,39 @@ def solve(weights):
         solutions[i] = max(case1_solution, case2_solution)
 
     # The answer to the largest subproblem is the answer to the original problem.
-    return solutions[len(weights)]
+    return solutions[len(weights)], solutions
 
 
-def write_output(filename, solution):
-    if filename is None:
-        print solution
-        return
+def reconstruct_solution(solutions):
+    indices_to_include = []
 
-    with open(filename, "w") as output_file:
-        output_file.write(solution)
+    # Starting from the last element and stepping backwards, following the winning case every time.
+    i = len(solutions) - 1
+    while i >= 1:
+        case_1_wins = solutions[i] == solutions[i - 1]
+        if case_1_wins:
+            # If case 1 won here, we'll just ignore this item.
+            i -= 1
+        else:
+            # If case 2 won here, we'll remember this item and make 2 steps back.
+            indices_to_include.insert(0, i - 1)
+            i -= 2
+
+    return indices_to_include
+
+
+def write_output(weights, max_weight_sum, solutions, indices_to_include):
+    print "--- Weights ---"
+    print weights
+
+    print "--- Subproblem Solutions ---"
+    print solutions
+
+    print "--- Indices to Include ---"
+    print indices_to_include
+
+    print "--- Max Sum ---"
+    print max_weight_sum
 
 
 if __name__ == "__main__":
