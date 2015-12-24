@@ -64,7 +64,9 @@ def bellman_ford(graph, start_vertex):
         at_least_one_path_relaxed = False
 
         for vertex in graph.vertices:
+            # Case 1: follow the path known before.
             case1_distance = distances[vertex.label]
+            # Case 2: try reaching the current vertex through its inbound neighbors that are reachable in 'edge_budget - 1' steps.
             case2_distance = INFINITY
             better_predecessor = None
 
