@@ -1,0 +1,160 @@
+\documentclass[10pt,a4paper]{article}
+
+\input{../include/language.tex}
+
+\usepackage{multicol}
+\usepackage{enumitem}
+\usepackage{pdflscape}
+\usepackage{geometry}
+\usepackage{xcolor}
+\usepackage[explicit]{titlesec}
+\usepackage[many]{tcolorbox}
+
+
+\pagenumbering{gobble}
+\geometry{margin=1cm}
+\setlength{\columnsep}{0.7cm}
+
+\setlist[itemize]{leftmargin=*, itemsep=0.05em, topsep=0pt}
+\titleformat{\subsection}
+  {\normalfont\bfseries\fontsize{10pt}{0pt}\selectfont}
+  {}{0pt}
+  {\begin{tcolorbox}[
+      enhanced,
+      boxrule=-3pt,
+      arc=0pt,
+      outer arc=0pt,
+      interior code={\fill[overlay,gray!20] (frame.north west) rectangle (frame.south east);},
+    ]#1\end{tcolorbox}}
+\titlespacing\subsection{0pt}{0pt}{0pt}
+
+
+\begin{document}
+
+\begin{landscape}
+
+
+\section*{Глосарій термінів курсу}
+\textit{Курсивом} виділені теми для поглибленого вивчення.
+
+
+\begin{multicols*}{4}
+
+\subsection*{Algorithm Analysis}
+\begin{itemize}
+    \item Asymptotic Analysis
+    \item Big-O / Big-Theta / Big-Omega Notation
+    \item Amortized Time
+    \item Constant / Linear / Polynomial / Exponential / Combinatorial Complexity
+    \item Deterministic vs. Randomized
+    \item Brute-Force Search
+    \item Greedy Paradigm
+    \item Divide-and-Conquer Paradigm
+    \item Dynamic Programming Paradigm
+    \item \textit{Backtracking}
+    \item Master Theorem
+\end{itemize}
+
+\subsection*{Sorting}
+\begin{itemize}
+    \item Insertion Sort
+    \item Selection Sort
+    \item Bubble Sort
+    \item Merge Sort
+    \item Quick Sort
+    \item Comparison-Based Sorting Optimality
+    \item Counting Sort
+    \item Knuth Shuffling
+    \item Randomized Selection
+    \item k-th Order Statistics
+    \item In-Place Sorting
+    \item Sorting Stability
+\end{itemize}
+
+\subsection*{Search}
+\begin{itemize}
+    \item Binary Tree
+    \item Node / Root / Sibling / Leaf / Arity
+    \item Pre-Order / In-Order / Post-Order Traversal
+    \item Binary Search
+    \item Binary Heap
+    \item \textit{Fibonacci Heap}
+    \item Binary Search Tree
+    \item Balanced Binary Search Tree
+    \item AVL Tree
+    \item Red-Black Tree
+    \item \textit{B-Tree}
+    \item \textit{Splay Tree}
+    \item Hash Table
+    \item Bloom Filter
+    \item \textit{HyperLogLog}
+\end{itemize}
+
+\subsection*{Text Manipulation}
+\begin{itemize}
+    \item Hamming Distance
+    \item Levenshtein Distance
+    \item Damerau-Levenshtein Distance
+    \item Knuth-Morris-Pratt (KMP) Algorithm
+    \item \textit{Regular Expressions / NFA / DFA}
+\end{itemize}
+
+\subsection*{Compression}
+\begin{itemize}
+    \item Prefix-Free Encoding
+    \item Huffman Code
+    \item Lossy Compression
+    \item Lossless Compression
+\end{itemize}
+
+\subsection*{Graphs}
+\begin{itemize}
+    \item Vertex / Edge
+    \item Undirected / Directed / Directed Acyclic Graph (DAG)
+    \item Weighted Graph
+    \item Sparse / Dense Graph
+    \item Complete Graph
+    \item Breadth-First Search (BFS)
+    \item Depth-First Search (DFS)
+    \item Dijkstra's Algorithm
+    \item A* Algorithm
+    \item Bellman-Ford Algorithm
+    \item Floyd-Warshall Algorithm
+    \item Connected Component
+    \item Strongly Connected Component (SCC)
+    \item Topological Sorting
+    \item Minimum Spanning Tree (MST)
+    \item Prim's Algorithm
+    \item Kruskal's Algorithm
+    \item k-Clustering
+    \item Union-Find (Disjoint Set)
+    \item \textit{Bipartite Graph}
+    \item \textit{Stable Marriage Problem}
+    \item \textit{Euler/Hamiltonian Path/Cycle }
+    \item \textit{Minimum Cut / k-Cut}
+    \item \textit{Flow Graphs}
+\end{itemize}
+
+\subsection*{Problem Complexity Classes, Computability Theory}
+\begin{itemize}
+    \item Problem Reduction
+    \item P / NP / NP-Complete / NP-Hard
+    \item P \(\stackrel{?}{=}\) NP Question
+    \item Halting Problem
+    \item Knapsack Problem
+    \item 2-SAT / 3-SAT Problem
+    \item Traveling Salesman Problem (TSP)
+    \item Decision vs. Optimization Problems
+    \item TSP 2-OPT Heuristic
+    \item \textit{Pseudo-Polinomiality}
+    \item \textit{Bin Packing Problem}
+    \item \textit{Linear Programming / Simplex Method}
+    \item \textit{Quantum Computing / BQP Class}
+\end{itemize}
+
+\end{multicols*}
+
+
+\end{landscape}
+
+\end{document}
