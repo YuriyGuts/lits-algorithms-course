@@ -1,0 +1,3 @@
+[submodule "judge/hammurabi"]
+	path = judge/hammurabi
+	url = https://github.com/YuriyGuts/hammurabi
