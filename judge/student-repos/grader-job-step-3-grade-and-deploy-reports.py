@@ -53,7 +53,7 @@ def upload_reports_to_s3(report_dir, bucket, region):
     print "Uploading to S3..."
     print
 
-    s3_upload_cmd = "aws s3 cp {report_dir} s3://{bucket}/ --recursive --exclude \"*\" --include \"*.csv\" --include \"*.html\" --include \"*.csv\" --region {region}".format(**locals())
+    s3_upload_cmd = "aws s3 cp {report_dir} s3://{bucket}/ --recursive --exclude \"*\" --include \"*.csv\" --include \"*.html\" --include \"*.css\" --region {region}".format(**locals())
     print s3_upload_cmd
 
     _, s3_exit_code = get_program_output(s3_upload_cmd, shell=True)
