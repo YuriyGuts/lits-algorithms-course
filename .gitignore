@@ -2,7 +2,7 @@
 # Project-specific
 # -----------------
 judge/student-repos/*
-!judge/student-repos/grader-job.conf
+!judge/student-repos/grader-job.conf.template
 !judge/student-repos/*.py
 
 

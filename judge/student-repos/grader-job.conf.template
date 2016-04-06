@@ -2,6 +2,11 @@
     "aws_s3_bucket": "ENTER_BUCKET_NAME",
     "aws_s3_region": "ENTER_REGION_NAME",
 
+    "student_repos": {
+        "johndoe": "https://github.com/johndoe/algorithms",
+        "janedoe": "https://github.com/janedoe/algorithms"
+    },
+
     "problem_whitelist": [
         "discnt", "hamstr", "lngpok", "sigkey", "bugtrk", "gamsrv", "govern", "wchain", "career", "ijones"
     ]
