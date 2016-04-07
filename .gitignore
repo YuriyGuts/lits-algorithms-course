@@ -1,8 +1,9 @@
 # -----------------
 # Project-specific
 # -----------------
+judge/logs
 judge/student-repos/*
-!judge/student-repos/grader-job.conf.template
+!judge/student-repos/*.template
 !judge/student-repos/*.py
 
 

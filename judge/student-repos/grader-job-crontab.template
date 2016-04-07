@@ -1,0 +1,14 @@
+SHELL=/bin/bash
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+
+JUDGE_ROOT=/opt/lits-algorithms-judge
+LOG_ROOT=/opt/lits-algorithms-judge/logs
+
+# Every hour, update student repos, grade all solutions, and deploy reports to S3.
+0  *  *  *  *   cd "$JUDGE_ROOT/student-repos" && ./grader-job-run-all.py > "$LOG_ROOT/$(date +\%Y-\%m-\%d-\%H-\%M-\%S).out"
+
+# Every day at 23:45, archive the testrun reports.
+45 23 *  *  *   cd "$JUDGE_ROOT/hammurabi/hammurabi/grader/reports" && zip -r -m "reports-$(date +\%Y\%m).zip" . -i "testrun-$(date +\%Y\%m)*"
+
+# Every day at 23:45, archive the cron job reports.
+45 23 *  *  *   cd "$LOG_ROOT" && zip -r -m "judge-$(date +\%Y\%m).zip" . -i "$(date +\%Y-\%m)*.out"
