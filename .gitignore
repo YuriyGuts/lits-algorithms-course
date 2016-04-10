@@ -1,12 +1,3 @@
-# -----------------
-# Project-specific
-# -----------------
-judge/logs
-judge/student-repos/*
-!judge/student-repos/*.template
-!judge/student-repos/*.py
-
-
 # --------
 # LaTeX
 # --------
@@ -287,3 +278,8 @@ crashlytics-build.properties
 
 # sftp configuration file
 sftp-config.json
+
+# -----------------
+# Project-specific
+# -----------------
+!judge/build-support/**/*.out

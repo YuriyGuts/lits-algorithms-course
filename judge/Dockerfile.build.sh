@@ -1,9 +1,12 @@
 #!/usr/bin/env bash
 
+BUILD_DIR=`pwd`
+
+
 # ----- Install system software -----
 
 apt-get update
-apt-get -y install curl wget zip git nano mc
+apt-get -y install curl wget rsync zip git nano mc htop
 apt-get -y install software-properties-common
 echo "Europe/Kiev" > /etc/timezone && dpkg-reconfigure -f noninteractive tzdata
 
@@ -44,10 +47,26 @@ apt-get -y install ruby ruby-dev
 # wget -O scala-2.11.8.deb http://downloads.lightbend.com/scala/2.11.8/scala-2.11.8.deb && dpkg -i scala-2.11.8.deb && rm scala-2.11.8.deb
 
 
+# ----- Copy contents to proper folders -----
+
+cd "$BUILD_DIR"
+mv -f hammurabi "$JUDGE_ROOT/"
+mv -f student-repos "$JUDGE_ROOT/"
+mkdir "$JUDGE_ROOT/problems"
+mkdir "$JUDGE_ROOT/reports"
+
+cd build-support
+mv -f dotfiles/.??* ~/
+mv -f problem-templates "$JUDGE_ROOT/"
+mv -f custom-verifiers/*.py "$JUDGE_ROOT/hammurabi/hammurabi/grader/verifiers/"
+mv -f grader.conf "$JUDGE_ROOT/hammurabi/hammurabi/conf/"
+mv -f grader-job.conf "$JUDGE_ROOT/student-repos/"
+
+
 # ----- Set up Hammurabi -----
 
 # Promote submodule to independent Git repo.
-cd $JUDGE_ROOT/hammurabi
+cd "$JUDGE_ROOT/hammurabi"
 rm -rf .git
 git init
 git remote add origin https://github.com/YuriyGuts/hammurabi
@@ -55,17 +74,16 @@ git fetch --all
 git reset --hard origin/master
 git branch --set-upstream-to=origin/master
 
-# Set up dependencies and configs.
-cd $JUDGE_ROOT/hammurabi && pip install -r pip-requirements.txt
-cp $JUDGE_ROOT/student-repos/grader-job.conf.template $JUDGE_ROOT/student-repos/grader-job.conf
-cp $JUDGE_ROOT/hammurabi/hammurabi/conf/grader.conf.template $JUDGE_ROOT/hammurabi/hammurabi/conf/grader.conf
+# Set up dependencies.
+cd "$JUDGE_ROOT/hammurabi" && pip install -r pip-requirements.txt
 pip install awscli
 
 
 # ----- Set up crontab -----
 
-mkdir -p $JUDGE_ROOT/logs
-crontab $JUDGE_ROOT/student-repos/grader-job-crontab.template
+mkdir -p "$JUDGE_ROOT/logs"
+cd "$BUILD_DIR/build-support"
+crontab grader-job.crontab
 
 
 # ----- Clean up -----

@@ -6,7 +6,8 @@ ENV DEBIAN_FRONTEND=noninteractive \
     EDITOR=nano \
     JUDGE_ROOT=/opt/lits-algorithms-judge
 
-ADD . $JUDGE_ROOT
-RUN /bin/bash "$JUDGE_ROOT/Dockerfile.build.sh"
+WORKDIR $JUDGE_ROOT
+ADD . /tmp
+RUN cd /tmp && /bin/bash Dockerfile.build.sh
 
 CMD ["/sbin/my_init"]
