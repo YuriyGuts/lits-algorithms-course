@@ -24,6 +24,9 @@ echo "deb http://download.mono-project.com/repo/debian wheezy main" | tee /etc/a
 # Node.js
 curl -L https://raw.githubusercontent.com/nodesource/distributions/master/deb/setup_5.x | bash -
 
+# Ruby
+gpg --keyserver hkp://keys.gnupg.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3
+
 
 # ----- Install language tools -----
 
@@ -40,7 +43,7 @@ apt-get -y install mono-complete
 apt-get -y install nodejs
 
 # Ruby
-apt-get -y install ruby ruby-dev
+curl -sSL https://get.rvm.io | bash -s stable --ruby
 
 # Scala
 # Commented out right now - eats up too much container space and is not used by Hammurabi.
