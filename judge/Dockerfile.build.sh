@@ -43,7 +43,7 @@ apt-get -y install mono-complete
 apt-get -y install nodejs
 
 # Ruby
-curl -sSL https://get.rvm.io | bash -s stable --ruby
+curl -sSL https://get.rvm.io | bash -s stable --ruby=2.3.0
 
 # Scala
 # Commented out right now - eats up too much container space and is not used by Hammurabi.
