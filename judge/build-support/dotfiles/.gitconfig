@@ -1,0 +1,17 @@
+[alias]
+	st = status
+	hist = log --graph --abbrev-commit --decorate --date=short --format=format:'%C(bold blue)%h%C(reset) %C(green)[%ad]%C(reset)%C(red)%d%C(reset) %s%C(reset) %C(white)[%an]%C(reset)' --all
+	curhist = log --graph --abbrev-commit --decorate --date=short --format=format:'%C(bold blue)%h%C(reset) %C(green)[%ad]%C(reset)%C(red)%d%C(reset) %s%C(reset) %C(white)[%an]%C(reset)'
+	r = reset
+	r1 = reset HEAD^
+	r2 = reset HEAD^^
+	rh = reset --hard
+	rh1 = reset HEAD^ --hard
+	rh2 = reset HEAD^^ --hard
+	undo = checkout --
+	unstage = reset HEAD --
+	visual = !gitg
+	update = "!git remote update -p; git merge --ff-only @{u}"
+	nuclear-update = "!git pull --ff-only || (git reset --hard ; git checkout -- . ; git ls-files -o | xargs rm ; git pull -f)"
+	untracked = ls-files --others --exclude-standard
+	ignored = ls-files --others --ignored --exclude-standard
