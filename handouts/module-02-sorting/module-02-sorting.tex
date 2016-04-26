@@ -1,14 +1,21 @@
 \documentclass[12pt,a4paper]{report}
 
+\usepackage{amsmath}
+\usepackage{tikz}
+
+\usetikzlibrary{arrows.meta}
+\usetikzlibrary{shapes.misc}
+
 \input{../include/language.tex}
 \input{../include/styles.tex}
-
-\usepackage{amsmath}
 
 
 % TODO: Remove this after merging the modules into a single master file.
 \setcounter{chapter}{1}
 
+\tikzset{
+    basic/.style  = {draw, text width=20pt, circle, align=center}
+}
 
 \begin{document}
 
@@ -316,10 +323,179 @@ T(n) =
 Цей алгоритм називається QuickSelect (або Randomized Selection), і здатен працювати в середньому за \(O(N)\), що швидше, порівняно з повноцінним сортуванням за \(O(N \log N)\).
 
 
+\subsection{Піраміди та черги з пріоритетами}
+
+Споріднена із сортуванням задача --- реалізація черги з пріоритетами. Уявіть собі чергу в залізничну касу чи держустанову, в якій певні категорії людей мають право обслуговуватися в першу чергу, не залежно від того, в який час вони прийшли. Іншими словами, кожен відвідувач такої черги має числовий пріоритет \(P_i\), і ми мусимо завжди обслуговувати відвідувача з найвищим пріоритетом.
+
+Наприклад, черга нижче повинна обслуговуватися в такому порядку: \(E, C, D, F, B, A\).
+
+\begin{center}
+    \footnotesize
+    \begin{tikzpicture}
+        \path (0.0,0) node[circle,draw] (a) {1} node at (0.0,-0.7) {A}
+              (1.5,0) node[circle,draw] (b) {1} node at (1.5,-0.7) {B}
+              (3.0,0) node[circle,draw] (c) {3} node at (3.0,-0.7) {C}
+              (4.5,0) node[circle,draw] (d) {2} node at (4.5,-0.7) {D}
+              (6.0,0) node[circle,draw] (e) {3} node at (6.0,-0.7) {E}
+              (7.5,0) node[circle,draw] (f) {1} node at (7.5,-0.7) {F}
+              (11.0,0) node[rectangle,draw] (sink) {вікно обслуговування};
+
+        \path [draw,->,thick,-{Latex[length=2.5mm]}] (f) -- (sink);
+        \draw (a) -- (b) -- (c) -- (d) -- (e) -- (f);
+    \end{tikzpicture}
+\end{center}
+
+Нові клієнти приходять в процесі обслуговування, і черга повинна працювати коректно.
+
+Операції, які повинна підтримувати черга:
+
+\begin{enumerate}
+    \item Додати новий елемент до черги, з вказаним пріоритетом (|Add|).
+    \item Вилучити з черги елемент із максимальним пріоритетом (|ExtractMax|).
+    \item Дізнатися, який елемент має найвищий пріоритет, не вилучаючи його (|Peek|).
+\end{enumerate}
+
+Спробуймо реалізувати чергу з пріоритетами на звичайному невпорядкованому масиві:
+
+\begin{center}
+    \begin{tikzpicture}
+        \footnotesize
+        \draw[step=1cm,gray,very thin] (0,0) grid (8,1);
+        \draw node at (6.5,2.0) (insert-label) {місце вставки нового елемента};
+
+        \normalsize
+        \draw node at (0.5,0.5) {1};
+        \draw node at (1.5,0.5) {3};
+        \draw node at (2.5,0.5) {2};
+        \draw node at (3.5,0.5) {3};
+        \draw node at (4.5,0.5) {1};
+        \draw node at (5.5,0.5) {1};
+        \draw node at (6.5,0.5) (insert-cell) {};
+
+        \draw [draw,->,thick,-{Latex[length=2.5mm]}] (insert-label) -- (insert-cell);
+    \end{tikzpicture}
+\end{center}
+
+Тепер проаналізуємо, скільки часу займе кожна з потрібних нам операцій:
+
+\begin{enumerate}
+    \item |Add| --- оскільки ми завжди додаємо елементи в кінець, це займе \(O(1)\).
+    \item |ExtractMax| --- оскільки елементи не впорядковані, нам потрібно щоразу знаходити максимум та зсовувати решту елементів ліворуч після вилучення, тому \(O(N)\).
+    \item |Peek| --- оскільки елементи не впорядковані, нам потрібно щоразу знаходити максимум, тому \(O(N)\).
+\end{enumerate}
+
+Тепер, якщо ми вставимо та вилучимо \(N\) клієнтів, вилучення сумарно займе \(N \cdot O(N) = O(N^2)\). Можливо, буде краще, якщо ми завжди триматимемо цей масив впорядкованим за пріоритетом?
+
+\begin{center}
+    \begin{tikzpicture}
+        \footnotesize
+        \draw[step=1cm,gray,very thin] (0,0) grid (8,1);
+        \draw node at (3,2.0) (insert-label) {місце вставки нового елемента з пріоритетом 2};
+
+        \normalsize
+        \draw node at (0.5,0.5) {3};
+        \draw node at (1.5,0.5) {3};
+        \draw node at (2.5,0.5) {2};
+        \draw node at (3.5,0.5) {1};
+        \draw node at (4.5,0.5) {1};
+        \draw node at (5.5,0.5) {1};
+        \draw node at (3,1) (insert-cell) {};
+
+        \draw [draw,->,thick,-{Latex[length=2.5mm]}] (insert-label) -- (insert-cell);
+    \end{tikzpicture}
+\end{center}
+
+Подивимося, чи став час кращим:
+
+\begin{enumerate}
+    \item |Add| --- оскільки нам завжди потрібно зберігати масив впорядкованим, може статися так, що нам потрібно буде вставити елемент із середнім пріоритетом, і тоді нам доведеться зсунути половину елементів праворуч. Тому час --- \(O(N)\).
+    \item |ExtractMax| --- оскільки елементи уже впорядковані, нам потрібно просто вилучити найлівіший елемент. У випадку масиву це буде \(O(N)\), а якщо використаємо зв’язаний список --- \(O(1)\).
+    \item |Peek| --- оскільки елементи уже впорядковані, ми просто повертаємо значення найлівішого елемента, тому \(O(1)\).
+\end{enumerate}
+
+Оскільки операція |Add| працює за \(O(N)\), вставка і вилучення \(N\) елементів все одно займе \(O(N^2)\) часу. Таким чином, сумарно ми не отримали виграшу від впорядкованості масиву.
+
+На щастя, для черги з пріоритетами існує спосіб отримати час, кращий за квадратичний. Він полягає у застосуванні структури даних «піраміда» (heap). Піраміда підтримує саме ті три операції, які нам потрібні --- |Add|, |ExtractMax| та |Peek|.
+
+Існує кілька способів реалізації піраміди. Ми розглянемо її найпростіший підвид --- бінарна піраміда (Binary Heap).
+
+Binary Heap --- це бінарне дерево, яке має дві додаткові властивості:
+
+\begin{enumerate}
+    \item Всі рівні, крім останнього, мусять бути заповнені.
+    \item Для будь-якого вузла повинна виконуватися властивість (heap property): значення вузла мусить бути не меншим, ніж значення кожного з його дітей.
+\end{enumerate}
+
+\begin{center}
+    \begin{tikzpicture}
+    \begin{scope}[every node/.style={basic}]
+    \node                                                  (level1-1) {9};
+    \node [below of = level1-1,xshift=-120pt,yshift=-20pt] (level2-1) {7};
+    \node [below of = level1-1,xshift= 120pt,yshift=-20pt] (level2-2) {5};
+    \node [below of = level2-1,xshift=-60pt,yshift=-20pt]  (level3-1) {4};
+    \node [below of = level2-1,xshift= 60pt,yshift=-20pt]  (level3-2) {4};
+    \node [below of = level2-2,xshift=-60pt,yshift=-20pt]  (level3-3) {5};
+    \node [below of = level2-2,xshift= 60pt,yshift=-20pt]  (level3-4) {3};
+    \node [below of = level3-1,xshift=-30pt,yshift=-20pt]  (level4-1) {1};
+    \node [below of = level3-1,xshift= 30pt,yshift=-20pt]  (level4-2) {3};
+    \node [below of = level3-2,xshift=-30pt,yshift=-20pt]  (level4-3) {2};
+    \node [below of = level3-2,xshift= 30pt,yshift=-20pt]  (level4-4) {1};
+    \node [below of = level3-3,xshift=-30pt,yshift=-20pt]  (level4-5) {4};
+
+    \path [draw,thick] (level4-5) -- (level3-3);
+    \path [draw,thick] (level4-4) -- (level3-2);
+    \path [draw,thick] (level4-3) -- (level3-2);
+    \path [draw,thick] (level4-2) -- (level3-1);
+    \path [draw,thick] (level4-2) -- (level3-1);
+    \path [draw,thick] (level4-1) -- (level3-1);
+    \path [draw,thick] (level3-4) -- (level2-2);
+    \path [draw,thick] (level3-3) -- (level2-2);
+    \path [draw,thick] (level3-2) -- (level2-1);
+    \path [draw,thick] (level3-1) -- (level2-1);
+    \path [draw,thick] (level2-2) -- (level1-1);
+    \path [draw,thick] (level2-1) -- (level1-1);
+    \end{scope}
+
+    \end{tikzpicture}
+\end{center}
+
+Операція вставки в Binary Heap відбувається так:
+\begin{enumerate}
+    \item Додаємо наш елемент на останній рівень (останній рівень завжди заповнюється зліва направо).
+    \item Порівнюємо його з батьком. Якщо батько менший --- обмінюємо їх місцями.
+    \item Повторюємо обміни доти, доки не досягнемо батька, який не менший за величиною, або поки не досягнемо кореня.
+\end{enumerate}
+
+Операція вилучення максимального елемента:
+\begin{enumerate}
+    \item Вилучаємо корінь, на його місце ставимо найправіший елемент з нижнього рівня.
+    \item Якщо хтось із дітей нового кореня має більше значення, ніж корінь, обмінюємо корінь та кращу дитину місцями.
+    \item «Топимо» наш елемент вниз до тих пір, поки обоє його дітей не будуть менші, або поки не досягнемо дна.
+\end{enumerate}
+
+Візуалізацію роботи Binary Heap можна подивитися на \href{http://visualgo.net/heap}{http://visualgo.net/heap}.
+
+Проаналізуємо час виконання операцій:
+
+\begin{enumerate}
+    \item |Add| --- в результаті вставки новий вузол підніметься щонайбільше на \(h\) рівнів, де \(h\) --- висота дерева. Для заповненого бінарного дерева \(h = O(\log N)\), тому час вставки --- \(O(\log N)\).
+    \item |ExtractMax| --- в результаті вилучення новий корінь опуститься щонайбільше на \(h\) рівнів, тому час вилучення --- \(O(\log N)\).
+    \item |Peek| --- оскільки максимальний елемент завжди лежить в корені, ми просто повертаємо значення кореня, тому \(O(1)\).
+\end{enumerate}
+
+Тепер, якщо нам потрібно вставити в чергу \(N\) клієнтів та вилучити їх, сумарно це займе \(N \cdot O(\log N) + N \cdot O(\log N) = O(N \log N)\) операцій. Таким чином, ми зменшили найгірший час роботи з квадратичного до квазілінійного.
+
+Можна було помітити, що фактично Heap працює таким чином: ми вкладаємо в нього невпорядковані елементи, а, вилучаючи, отримаємо уже впорядковані. Відповідно, ми можемо сортувати масиви за допомогою Heap! Достатньо просто внести всі елементи в Heap, а потім їх один за одним вилучити. Сумарно це займе \(O(N \log N)\) часу, отже, ми «винайшли» ще один асимптотично оптимальний алгоритм сортування, який має назву HeapSort.
+
 
 \section*{Ресурси для поглибленого вивчення}
 \begin{enumerate}
-    \item Візуалізація алгоритмів сортування. \href{http://www.sorting-algorithms.com/}{http://www.sorting-algorithms.com/}
+    \item Візуалізація алгоритмів сортування.
+
+    \href{http://www.sorting-algorithms.com/}{http://www.sorting-algorithms.com/}
+    
+    \href{http://visualgo.net/}{http://visualgo.net/}
+
     \item Robert Sedgewick, Kevin Wayne. Algorithms, 4\textsuperscript{th} edition: {\itshape Chapter 2: Sorting}.
     \item Steven Skiena. The Algorithm Design Manual, 2\textsuperscript{nd} edition: {\itshape Chapter 4.10: Divide-and-Conquer}.
     \item Cormen, Leierson, Rivest, Stein. Introduction to Algorithms, 3\textsuperscript{rd} edition: {\itshape Chapter 8: Sorting in Linear Time}.
