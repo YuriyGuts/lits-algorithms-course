@@ -14,7 +14,7 @@
 \setcounter{chapter}{2}
 
 \tikzset{
-    basic/.style  = {draw, text width=20pt, circle, align=center}
+    basic/.style  = {draw, text width=50pt, rectangle, align=center}
 }
 
 \begin{document}
@@ -48,7 +48,7 @@
 \begin{itemize}
     \item |Remove(key)| -- вилучити елемент з бази.
     \item |Exists(key)| -- перевірити, чи елемент існує в базі.
-    \item |FindAllInRange(rangeStart, rangeEnd)| -- знайти усі елементи, де ключ лежить в діапазоні від |rangeStart| до |rangeEnd|.
+    \item |GetAllInRange(rangeStart, rangeEnd)| -- знайти усі елементи, де ключ лежить в діапазоні від |rangeStart| до |rangeEnd|.
 \end{itemize}
 
 
@@ -78,7 +78,7 @@
     \end{tikzpicture}
 \end{center}
 
-Як і у випадку з Priority Queue з попереднього розділу, швидкодія такого підходу доволі очевидна: ми будемо вставляти новий елемент за \(O(1)\), проте час пошуку буде лише \(O(N)\). Якщо припустити, що ми змінюємо базу даних значно рідше, ніж шукаємо в ній елементи, такий підхід буде надто повільним.
+Як і у випадку з Priority Queue з попереднього модуля, швидкодія такого підходу доволі очевидна: ми будемо вставляти новий елемент за \(O(1)\), проте час пошуку буде лише \(O(N)\). Якщо припустити, що ми змінюємо базу даних значно рідше, ніж шукаємо в ній елементи, такий підхід буде надто повільним.
 
 Проте, ми вже володіємо прийомами сортування. Можливо, вигідніше буде впорядкувати дані, щоб потім пошук по них відбувався швидше?
 
@@ -155,5 +155,158 @@
 
 \lstinputlisting{code/binary_search_edge.py}
 
+
+
+\section{Бінарні дерева пошуку}
+
+У попередньому модулі ми уже зустрічали частковий випадок бінарного дерева --- бінарну піраміду (Binary Heap), яка застосовувалася для пошуку максимумів (мінімумів) у змінному потоці даних.
+
+Повернемося до нашого прикладу з пошуком користувачів у впорядкованому масиві. Спробуємо проаналізувати, за якою логікою ми порівнюємо середні елементи при бінарному пошуку.
+
+Спочатку ми порівнюємо з |dave|. Якщо те, що ми шукаємо, менше за |dave|, ми порівнюємо з |bob|, якщо більше --- з |fred|. Якщо те, що ми шукаємо, більше за |fred|, ми порівнюємо з |george|, і так далі. Таким чином, логіку порівнянь можна описати таким бінарним деревом:
+
+\begin{center}
+    \begin{tikzpicture}
+    \begin{scope}[every node/.style={basic}]
+    \node                                                  (level1-1) {dave};
+    \node [below of = level1-1,xshift=-120pt,yshift=-20pt] (level2-1) {bob};
+    \node [below of = level1-1,xshift= 120pt,yshift=-20pt] (level2-2) {fred};
+    \node [below of = level2-1,xshift=-60pt,yshift=-20pt]  (level3-1) {alice};
+    \node [below of = level2-1,xshift= 60pt,yshift=-20pt]  (level3-2) {charlie};
+    \node [below of = level2-2,xshift=-60pt,yshift=-20pt]  (level3-3) {eve};
+    \node [below of = level2-2,xshift= 60pt,yshift=-20pt]  (level3-4) {george};
+    \node [below of = level3-4,xshift= 30pt,yshift=-20pt]  (level4-8) {henry};
+
+    \path [draw,thin] (level4-8) -- (level3-4);
+    \path [draw,thin] (level3-4) -- (level2-2);
+    \path [draw,thin] (level3-3) -- (level2-2);
+    \path [draw,thin] (level3-2) -- (level2-1);
+    \path [draw,thin] (level3-1) -- (level2-1);
+    \path [draw,thin] (level2-2) -- (level1-1);
+    \path [draw,thin] (level2-1) -- (level1-1);
+    \end{scope}
+
+    \draw node at (-2.2,-0.4) {<};
+    \draw node at ( 2.2,-0.4) {>};
+    \draw node at (-5.5,-2.3) {<};
+    \draw node at ( 5.5,-2.3) {>};
+    \draw node at (-2.8,-2.3) {>};
+    \draw node at ( 2.8,-2.3) {<};
+    \draw node at ( 7.2,-4.2) {>};
+
+    \end{tikzpicture}
+\end{center}
+
+Таке дерево називається \textbf{бінарним деревом пошуку} (Binary Search Tree, BST). Це підвид бінарного дерева, який має додаткову властивість: для будь-якого вузла всі елементи в лівому піддереві менші за вузол, в правому --- більші за вузол.
+
+Зберігання даних у вигляді дерева має певні вигоди: ми використовуємо рівно стільки пам’яті, скільки у нас є даних, не резервуючи вільних комірок, як би це було у випадку з масивом; а також, ми можемо швидше вставляти нові елементи, оскільки нам не потрібно зсовувати всі наступні елементи, щоб додати елемент всередину.
+
+Якби нам потрібно було вставити елемент |carl|, ми можемо достатньо швидко підшукати для нього нове місце:
+
+\begin{center}
+    \begin{tikzpicture}
+    \begin{scope}[every node/.style={basic}]
+    \node                                                  (level1-1) {dave};
+    \node [below of = level1-1,xshift=-120pt,yshift=-20pt] (level2-1) {bob};
+    \node [below of = level1-1,xshift= 120pt,yshift=-20pt] (level2-2) {fred};
+    \node [below of = level2-1,xshift=-60pt,yshift=-20pt]  (level3-1) {alice};
+    \node [below of = level2-1,xshift= 60pt,yshift=-20pt]  (level3-2) {charlie};
+    \node [below of = level2-2,xshift=-60pt,yshift=-20pt]  (level3-3) {eve};
+    \node [below of = level2-2,xshift= 60pt,yshift=-20pt]  (level3-4) {george};
+    \node [below of = level3-2,xshift=-30pt,yshift=-20pt,color=cyan]  (level4-3) {carl};    
+    \node [below of = level3-4,xshift= 30pt,yshift=-20pt]  (level4-8) {henry};
+
+    \path [draw,thin,color=cyan] (level4-3) -- (level3-2);
+    \path [draw,thin] (level4-8) -- (level3-4);
+    \path [draw,thin] (level3-4) -- (level2-2);
+    \path [draw,thin] (level3-3) -- (level2-2);
+    \path [draw,thin] (level3-2) -- (level2-1);
+    \path [draw,thin] (level3-1) -- (level2-1);
+    \path [draw,thin] (level2-2) -- (level1-1);
+    \path [draw,thin] (level2-1) -- (level1-1);
+    \end{scope}
+
+    \end{tikzpicture}
+\end{center}
+
+Виглядає, що якщо ми будемо дотримуватися властивості бінарного дерева пошуку, ми можемо завжди вставити та знайти будь-який елемент за \(O(\log N)\) часу. Проте існують випадки, коли бінарне дерево пошуку виявиться дуже неефективною структурою.
+
+Уявимо собі, що елементи надходять до нашої бази в такому порядку: |alice|, |bob|, |charlie|, |dave|. Якщо ми будемо по черзі вставляти їх у бінарне дерево пошуку, ми отримаємо таке:
+
+|Add("alice", new Person())|
+
+\begin{center}
+    \begin{tikzpicture}
+    \begin{scope}[every node/.style={basic}]
+    \node [color=cyan] (level1-1) {alice};
+    \end{scope}
+
+    \end{tikzpicture}
+\end{center}
+
+|Add("bob", new Person())|
+
+\begin{center}
+    \begin{tikzpicture}
+    \begin{scope}[every node/.style={basic}]
+    \node                                                  (level1-1) {alice};
+    \node [below of = level1-1,xshift=60pt,yshift=-10pt, color=cyan] (level2-1) {bob};
+    \end{scope}
+
+    \path [draw,thin,color=cyan] (level2-1) -- (level1-1);
+    \end{tikzpicture}
+\end{center}
+
+|Add("charlie", new Person())|
+
+\begin{center}
+    \begin{tikzpicture}
+    \begin{scope}[every node/.style={basic}]
+    \node                                                           (level1-1) {alice};
+    \node [below of = level1-1,xshift=60pt,yshift=-10pt]            (level2-1) {bob};
+    \node [below of = level2-1,xshift=60pt,yshift=-10pt,color=cyan] (level3-1) {charlie};
+    \end{scope}
+
+    \path [draw,thin]            (level2-1) -- (level1-1);
+    \path [draw,thin,color=cyan] (level3-1) -- (level2-1);
+    \end{tikzpicture}
+\end{center}
+
+|Add("dave", new Person())|
+
+\begin{center}
+    \begin{tikzpicture}
+    \begin{scope}[every node/.style={basic}]
+    \node                                                           (level1-1) {alice};
+    \node [below of = level1-1,xshift=60pt,yshift=-10pt]            (level2-1) {bob};
+    \node [below of = level2-1,xshift=60pt,yshift=-10pt]            (level3-1) {charlie};
+    \node [below of = level3-1,xshift=60pt,yshift=-10pt,color=cyan] (level4-1) {dave};
+    \end{scope}
+
+    \path [draw,thin]            (level2-1) -- (level1-1);
+    \path [draw,thin]            (level3-1) -- (level2-1);
+    \path [draw,thin,color=cyan] (level4-1) -- (level3-1);
+    \end{tikzpicture}
+\end{center}
+
+Хоч ми отримали цілком коректне бінарне дерево пошуку з точки зору властивостей, в цьому випадку ми можемо витрачати аж \(O(N)\) часу для того, щоб вставити або знайти елемент. Виглядає, що ми можемо досягнути хорошої швидкодії лише тоді, коли ліве та праве піддерево будуть врівноважені за висотою, і було б чудово, якби дерево могло врівноважити себе самостійно при вставці та вилученні елементів.
+
+\begin{center}
+    \begin{tikzpicture}
+    \begin{scope}[every node/.style={basic}]
+    \node                                                  (level1-1) {charlie};
+    \node [below of = level1-1,xshift=-120pt,yshift=-20pt] (level2-1) {bob};
+    \node [below of = level1-1,xshift= 120pt,yshift=-20pt] (level2-2) {dave};
+    \node [below of = level2-1,xshift=-60pt,yshift=-20pt]  (level3-1) {alice};
+
+    \path [draw,thin] (level3-1) -- (level2-1);
+    \path [draw,thin] (level2-2) -- (level1-1);
+    \path [draw,thin] (level2-1) -- (level1-1);
+    \end{scope}
+
+    \end{tikzpicture}
+\end{center}
+
+Такі дерева існують, і вони називаються \textbf{збалансованими бінарними деревами пошуку} (Balanced Binary Search Tree). Вони мають ті ж самі властивості, що й бінарні дерева пошуку, проте при зміні елементів вони проводять різноманітні операції обміну вузлів, так щоб урівноважити ліве та праве піддерево. Це дозволяє їм забезпечити гарантовану швидкодію \(O(\log N)\) для вставки, пошуку та вилучення елементів. Найвідомішими такими деревами є AVL-дерево (AVL Tree) та червоно-чорне дерево (Red-Black Tree), про логіку роботи яких можна прочитати в матеріалах для поглибленого вивчення, вказаних в кінці модуля. 
 
 \end{document}
