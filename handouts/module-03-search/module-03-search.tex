@@ -13,9 +13,9 @@
 % TODO: Remove this after merging the modules into a single master file.
 \setcounter{chapter}{2}
 
-\tikzset{
-    basic/.style = {draw, text width=50pt, rectangle, align=center}
-}
+\tikzset{basic/.style = {draw, text width=50pt, rectangle, align=center}}
+\tikzset{treenode/.style={draw, thick, text width=50pt, minimum height=20pt, text centered, rectangle, rounded corners=4pt, align=center, anchor=mid}}
+
 
 \begin{document}
 
@@ -167,7 +167,8 @@
 
 \begin{center}
     \begin{tikzpicture}
-    \begin{scope}[every node/.style={basic}]
+
+    \begin{scope}[every node/.style={treenode}]
     \node                                                  (level1-1) {dave};
     \node [below of = level1-1,xshift=-120pt,yshift=-20pt] (level2-1) {bob};
     \node [below of = level1-1,xshift= 120pt,yshift=-20pt] (level2-2) {fred};
@@ -177,13 +178,13 @@
     \node [below of = level2-2,xshift= 60pt,yshift=-20pt]  (level3-4) {george};
     \node [below of = level3-4,xshift= 30pt,yshift=-20pt]  (level4-8) {henry};
 
-    \path [draw,thin] (level4-8) -- (level3-4);
-    \path [draw,thin] (level3-4) -- (level2-2);
-    \path [draw,thin] (level3-3) -- (level2-2);
-    \path [draw,thin] (level3-2) -- (level2-1);
-    \path [draw,thin] (level3-1) -- (level2-1);
-    \path [draw,thin] (level2-2) -- (level1-1);
-    \path [draw,thin] (level2-1) -- (level1-1);
+    \path [draw,thick] (level4-8) -- (level3-4);
+    \path [draw,thick] (level3-4) -- (level2-2);
+    \path [draw,thick] (level3-3) -- (level2-2);
+    \path [draw,thick] (level3-2) -- (level2-1);
+    \path [draw,thick] (level3-1) -- (level2-1);
+    \path [draw,thick] (level2-2) -- (level1-1);
+    \path [draw,thick] (level2-1) -- (level1-1);
     \end{scope}
 
     \draw node at (-2.2,-0.4) {<};
@@ -205,25 +206,25 @@
 
 \begin{center}
     \begin{tikzpicture}
-    \begin{scope}[every node/.style={basic}]
-    \node                                                  (level1-1) {dave};
-    \node [below of = level1-1,xshift=-120pt,yshift=-20pt] (level2-1) {bob};
-    \node [below of = level1-1,xshift= 120pt,yshift=-20pt] (level2-2) {fred};
-    \node [below of = level2-1,xshift=-60pt,yshift=-20pt]  (level3-1) {alice};
-    \node [below of = level2-1,xshift= 60pt,yshift=-20pt]  (level3-2) {charlie};
-    \node [below of = level2-2,xshift=-60pt,yshift=-20pt]  (level3-3) {eve};
-    \node [below of = level2-2,xshift= 60pt,yshift=-20pt]  (level3-4) {george};
-    \node [below of = level3-2,xshift=-30pt,yshift=-20pt,color=cyan]  (level4-3) {carl};    
-    \node [below of = level3-4,xshift= 30pt,yshift=-20pt]  (level4-8) {henry};
+    \begin{scope}[every node/.style={treenode}]
+    \node                                                              (level1-1) {dave};
+    \node [below of = level1-1,xshift=-120pt,yshift=-20pt]             (level2-1) {bob};
+    \node [below of = level1-1,xshift= 120pt,yshift=-20pt]             (level2-2) {fred};
+    \node [below of = level2-1,xshift=-60pt,yshift=-20pt]              (level3-1) {alice};
+    \node [below of = level2-1,xshift= 60pt,yshift=-20pt]              (level3-2) {charlie};
+    \node [below of = level2-2,xshift=-60pt,yshift=-20pt]              (level3-3) {eve};
+    \node [below of = level2-2,xshift= 60pt,yshift=-20pt]              (level3-4) {george};
+    \node [below of = level3-2,xshift=-30pt,yshift=-20pt,color=cyan]   (level4-3) {carl};    
+    \node [below of = level3-4,xshift= 30pt,yshift=-20pt]              (level4-8) {henry};
 
-    \path [draw,thin,color=cyan] (level4-3) -- (level3-2);
-    \path [draw,thin] (level4-8) -- (level3-4);
-    \path [draw,thin] (level3-4) -- (level2-2);
-    \path [draw,thin] (level3-3) -- (level2-2);
-    \path [draw,thin] (level3-2) -- (level2-1);
-    \path [draw,thin] (level3-1) -- (level2-1);
-    \path [draw,thin] (level2-2) -- (level1-1);
-    \path [draw,thin] (level2-1) -- (level1-1);
+    \path [draw,thick,color=cyan] (level4-3) -- (level3-2);
+    \path [draw,thick] (level4-8) -- (level3-4);
+    \path [draw,thick] (level3-4) -- (level2-2);
+    \path [draw,thick] (level3-3) -- (level2-2);
+    \path [draw,thick] (level3-2) -- (level2-1);
+    \path [draw,thick] (level3-1) -- (level2-1);
+    \path [draw,thick] (level2-2) -- (level1-1);
+    \path [draw,thick] (level2-1) -- (level1-1);
     \end{scope}
 
     \end{tikzpicture}
@@ -237,7 +238,7 @@
 
 \begin{center}
     \begin{tikzpicture}
-    \begin{scope}[every node/.style={basic}]
+    \begin{scope}[every node/.style={treenode}]
     \node [color=cyan] (level1-1) {alice};
     \end{scope}
 
@@ -248,12 +249,12 @@
 
 \begin{center}
     \begin{tikzpicture}
-    \begin{scope}[every node/.style={basic}]
-    \node                                                  (level1-1) {alice};
+    \begin{scope}[every node/.style={treenode}]
+    \node                                                            (level1-1) {alice};
     \node [below of = level1-1,xshift=60pt,yshift=-10pt, color=cyan] (level2-1) {bob};
     \end{scope}
 
-    \path [draw,thin,color=cyan] (level2-1) -- (level1-1);
+    \path [draw,thick,color=cyan] (level2-1) -- (level1-1);
     \end{tikzpicture}
 \end{center}
 
@@ -261,14 +262,14 @@
 
 \begin{center}
     \begin{tikzpicture}
-    \begin{scope}[every node/.style={basic}]
+    \begin{scope}[every node/.style={treenode}]
     \node                                                           (level1-1) {alice};
     \node [below of = level1-1,xshift=60pt,yshift=-10pt]            (level2-1) {bob};
     \node [below of = level2-1,xshift=60pt,yshift=-10pt,color=cyan] (level3-1) {charlie};
     \end{scope}
 
-    \path [draw,thin]            (level2-1) -- (level1-1);
-    \path [draw,thin,color=cyan] (level3-1) -- (level2-1);
+    \path [draw,thick]            (level2-1) -- (level1-1);
+    \path [draw,thick,color=cyan] (level3-1) -- (level2-1);
     \end{tikzpicture}
 \end{center}
 
@@ -276,16 +277,16 @@
 
 \begin{center}
     \begin{tikzpicture}
-    \begin{scope}[every node/.style={basic}]
+    \begin{scope}[every node/.style={treenode}]
     \node                                                           (level1-1) {alice};
     \node [below of = level1-1,xshift=60pt,yshift=-10pt]            (level2-1) {bob};
     \node [below of = level2-1,xshift=60pt,yshift=-10pt]            (level3-1) {charlie};
     \node [below of = level3-1,xshift=60pt,yshift=-10pt,color=cyan] (level4-1) {dave};
     \end{scope}
 
-    \path [draw,thin]            (level2-1) -- (level1-1);
-    \path [draw,thin]            (level3-1) -- (level2-1);
-    \path [draw,thin,color=cyan] (level4-1) -- (level3-1);
+    \path [draw,thick]            (level2-1) -- (level1-1);
+    \path [draw,thick]            (level3-1) -- (level2-1);
+    \path [draw,thick,color=cyan] (level4-1) -- (level3-1);
     \end{tikzpicture}
 \end{center}
 
@@ -293,15 +294,15 @@
 
 \begin{center}
     \begin{tikzpicture}
-    \begin{scope}[every node/.style={basic}]
+    \begin{scope}[every node/.style={treenode}]
     \node                                                  (level1-1) {charlie};
     \node [below of = level1-1,xshift=-120pt,yshift=-20pt] (level2-1) {bob};
     \node [below of = level1-1,xshift= 120pt,yshift=-20pt] (level2-2) {dave};
     \node [below of = level2-1,xshift=-60pt,yshift=-20pt]  (level3-1) {alice};
 
-    \path [draw,thin] (level3-1) -- (level2-1);
-    \path [draw,thin] (level2-2) -- (level1-1);
-    \path [draw,thin] (level2-1) -- (level1-1);
+    \path [draw,thick] (level3-1) -- (level2-1);
+    \path [draw,thick] (level2-2) -- (level1-1);
+    \path [draw,thick] (level2-1) -- (level1-1);
     \end{scope}
 
     \end{tikzpicture}
