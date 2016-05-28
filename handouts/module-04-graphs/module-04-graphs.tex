@@ -1,5 +1,11 @@
 \documentclass[12pt,a4paper]{report}
 
+\usepackage{amsmath}
+\usepackage{tikz}
+
+\usetikzlibrary{arrows.meta}
+\usetikzlibrary{shapes.misc}
+
 \input{../include/language.tex}
 \input{../include/styles.tex}
 
@@ -7,9 +13,154 @@
 % TODO: Remove this after merging the modules into a single master file.
 \setcounter{chapter}{3}
 
+\tikzset{
+    basic/.style = {draw, text width=30pt, circle, align=center}
+}
 
 \begin{document}
 
 \chapter{Графи}
+
+% Insert table of contents.
+\begingroup
+\let\clearpage\relax
+\tableofcontents
+\endgroup
+
+
+
+\section{Термінологія}
+
+Графи дозволяють моделювати складні взаємовідносини між об’єктами. Наприклад, стосунки між користувачами соціальної мережі чи карту автомобільних доріг міста.
+
+З формальної точки зору, граф складається із двох множин --- множини вершин \(V\) (vertices) та ребер \(E\) (edges), що їх з’єднують. Кожне ребро \(e_i\) з’єднує рівно дві вершини \(v_{start}\), \(v_{end}\).
+
+У випадку з соціальною мережею Facebook, вузлами можуть бути її користувачі. Між двома користувачами буде ребро, якщо вони друзі в Facebook.
+
+\begin{center}
+    \begin{tikzpicture}
+    \footnotesize
+
+    \begin{scope}[every node/.style={basic}]
+    \node at (-1,1)   (alice)    {Alice};
+    \node at (1,3)    (bob)      {Bob};
+    \node at (3,0.5)  (charlie)  {Charlie};
+    \node at (6,2)    (dave)     {Dave};
+    \node at (9,2)    (eve)      {Eve};
+    \node at (6,-1)   (fred)     {Fred};
+    \node at (9,0)    (george)   {George};
+
+    \tikzset{undirected/.style={draw,thick}}
+
+    \path (alice)    edge [undirected]   (bob);
+    \path (bob)      edge [undirected]   (charlie);
+    \path (charlie)  edge [undirected]   (alice);
+    \path (bob)      edge [undirected]   (dave);
+    \path (charlie)  edge [undirected]   (dave);
+    \path (dave)     edge [undirected]   (eve);
+    \path (fred)     edge [undirected]   (george);
+    \end{scope}
+
+    \end{tikzpicture}
+\end{center}
+
+Оскільки ребра не мають напряму (відношення дружби у Facebook є симетричним), такий граф називається \textbf{неорієнтованим} (undirected).
+
+Якщо ж ми розглянемо іншу соцмережу --- Twitter, то відношення Follow у ній несиметричне, і ребра Twitter-графу будуть напрямленими. Такий граф називається \textbf{орієнтованим} (directed), і його ребра іноді називають \textbf{дугами} (arcs):
+
+\begin{center}
+    \begin{tikzpicture}
+    \footnotesize
+
+    \begin{scope}[every node/.style={basic}]
+    \node at (-1,1)   (alice)    {Alice};
+    \node at (1,3)    (bob)      {Bob};
+    \node at (3,0.5)  (charlie)  {Charlie};
+    \node at (6,2)    (dave)     {Dave};
+    \node at (9,2)    (eve)      {Eve};
+    \node at (6,-1)   (fred)     {Fred};
+    \node at (9,0)    (george)   {George};
+
+    \tikzset{directed/.style={draw,->,thick,-{Latex[length=2.5mm]}}}
+
+    \path (alice)    edge [directed]              (bob);
+    \path (bob)      edge [directed, bend right]  (charlie);
+    \path (charlie)  edge [directed]              (alice);
+    \path (charlie)  edge [directed, bend right]  (bob);
+    \path (bob)      edge [directed]              (dave);
+    \path (charlie)  edge [directed]              (dave);
+    \path (dave)     edge [directed, bend right]  (eve);
+    \path (eve)      edge [directed, bend right]  (dave);
+    \path (fred)     edge [directed]              (george);
+    \path (fred)     edge [directed]              (dave);
+
+    \end{scope}
+
+    \end{tikzpicture}
+\end{center}
+
+Елементи графу також можуть мати числові ваги. Наприклад, якщо ми хочемо зобразити час поїздки між станціями київського метро, то отримаємо такий \textbf{зважений} (edge-weighted) граф:
+
+
+\begin{center}
+    \begin{tikzpicture}
+    \footnotesize
+
+    \tikzset{station/.style={draw, thick, text width=70pt, minimum height=30pt, text centered, rectangle, rounded corners=4pt, align=center, anchor=mid}}
+
+    \begin{scope}[every node/.style={station}]
+    \node at (-4,4)       (lukianivska)             {Лук’янівська};
+    \node at (-3,0.85)    (zoloti-vorota)           {Золоті Ворота};
+    \node at (0.75,0.85)  (teatralna)               {Театральна};
+    \node at (-1,-3)      (ploshcha-lva-tolstoho)   {Площа Льва Толстого};
+    \node at (3.5,-3.2)   (palats-sportu)           {Палац спорту};
+    \node at (5,4)        (poshtova-ploshcha)       {Поштова площа};
+    \node at (5,1.75)     (maidan-nezalezhnosti)    {Майдан Незалежності};
+    \node at (6,-1)       (khreshchatyk)            {Хрещатик};
+    \node at (9,-3.5)     (arsenalna)               {Арсенальна};
+    \end{scope}
+
+    \tikzset{undirected/.style={draw, thick, inner sep=5pt}}
+
+    \path (lukianivska)             edge [undirected]  node [right] {5}   (zoloti-vorota);
+    \path (zoloti-vorota)           edge [undirected]  node [above] {3}   (palats-sportu);
+    \path (zoloti-vorota)           edge [undirected]  node [above] {1}   (teatralna);
+    \path (ploshcha-lva-tolstoho)   edge [undirected]  node [above] {1}   (palats-sportu);
+    \path (ploshcha-lva-tolstoho)   edge [undirected]  node [above] {5}   (maidan-nezalezhnosti);
+    \path (maidan-nezalezhnosti)    edge [undirected]  node [right] {3}   (poshtova-ploshcha);
+    \path (maidan-nezalezhnosti)    edge [undirected]  node [right] {1}   (khreshchatyk);
+    \path (khreshchatyk)            edge [undirected]  node [below] {2}   (teatralna);
+    \path (khreshchatyk)            edge [undirected]  node [above] {4}   (arsenalna);
+
+    \end{tikzpicture}
+\end{center}
+
+Інколи граф може мати кілька ребер між однією й тією ж парою вершин (\textbf{кратні ребра}), або ж ребра, які з’єднують вершину саму з собою (\textbf{петлі}). Графи з такими ребрами називаються \textbf{мультиграфами}. Наприклад, уявімо граф поштової переписки:
+
+\begin{center}
+    \begin{tikzpicture}
+    \footnotesize
+
+    \tikzset{station/.style={draw, thick, text width=70pt, minimum height=20pt, text centered, rectangle, rounded corners=4pt, align=center, anchor=mid}}
+
+    \begin{scope}[every node/.style={station}]
+    \node at (-2,1)   (alice)    {Alice};
+    \node at (1,3)    (bob)      {Bob};
+    \node at (5,0.5)  (charlie)  {Charlie};
+    \node at (8,2)    (dave)     {Dave};
+    \end{scope}
+
+    \tikzset{directed/.style={draw, ->, thick, inner sep=10pt, -{Latex[length=2.5mm]}}}
+
+    \path (alice)      edge [directed]                                 node [left]                  {email 1}   (bob);
+    \path (alice)      edge [directed, out=300, in=240, looseness=10]  node [below, inner sep=5pt]  {email 2}   (alice);
+    \path (bob)        edge [directed, bend left]                      node [right]                 {email 3}   (charlie);
+    \path (bob)        edge [directed]                                 node [above]                 {email 4}   (charlie);
+    \path (bob)        edge [directed, bend right]                     node [left]                  {email 5}   (charlie);
+    \path (charlie)    edge [directed]                                 node [right]                 {email 6}   (dave);
+
+    \end{tikzpicture}
+\end{center}
+
 
 \end{document}
