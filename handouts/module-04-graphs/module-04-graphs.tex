@@ -1,10 +1,14 @@
 \documentclass[12pt,a4paper]{report}
 
 \usepackage{amsmath}
+\usepackage{booktabs}
 \usepackage{tikz}
 
 \usetikzlibrary{arrows.meta}
 \usetikzlibrary{shapes.misc}
+
+% The pipe character gets overriden in the code style definition, specify the table header beforehand.
+\newcommand{\adjmatrixlayout}{|r|c|c|c|c|c|c|c|}
 
 \input{../include/language.tex}
 \input{../include/styles.tex}
@@ -162,5 +166,84 @@
     \end{tikzpicture}
 \end{center}
 
+
+
+\section{Представлення графів}
+
+Графи легко зобразити графічно, проте для того, щоб ефективно виконувати алгоритми на графах, ми повинні придумати спосіб представляти їх у коді та в пам’яті комп’ютера.
+
+Одним з популярних представлень графів є \textbf{матриця суміжності} (adjacency matrix). Вона передбачає, що ми створюємо матрицю \(V \times V\), де рядками є початкові вершини, а стовпцями --- кінцеві вершини. Якщо з вершини \(v_i\) до вершини \(v_j\) є ребро, тоді відповідна клітинка \(A_{ij} = 1\). У випадку зваженого графа, замість 1 буде стояти вага ребра \(w_{(v_i, v_j)}\). Якщо граф неорієнтований, тоді матриця буде симетричною відносно основної діагоналі: \(A_{ij} = A_{ji}\).
+
+\begin{center}
+    \begin{tikzpicture}
+    \footnotesize
+
+    \begin{scope}[every node/.style={basic}]
+    \node at (-1,1)   (alice)    {Alice};
+    \node at (1,3)    (bob)      {Bob};
+    \node at (3,0.5)  (charlie)  {Charlie};
+    \node at (6,2)    (dave)     {Dave};
+    \node at (9,2)    (eve)      {Eve};
+    \node at (6,-1)   (fred)     {Fred};
+    \node at (9,0)    (george)   {George};
+
+    \tikzset{directed/.style={draw,->,thick,-{Latex[length=2.5mm]}}}
+
+    \path (alice)    edge [directed]              (bob);
+    \path (bob)      edge [directed, bend right]  (charlie);
+    \path (charlie)  edge [directed]              (alice);
+    \path (charlie)  edge [directed, bend right]  (bob);
+    \path (bob)      edge [directed]              (dave);
+    \path (charlie)  edge [directed]              (dave);
+    \path (dave)     edge [directed, bend right]  (eve);
+    \path (eve)      edge [directed, bend right]  (dave);
+    \path (fred)     edge [directed]              (george);
+    \path (fred)     edge [directed]              (dave);
+
+    \end{scope}
+
+    \end{tikzpicture}
+\end{center}
+
+\renewcommand{\arraystretch}{1.5}
+
+\begin{center}
+    \begin{tabular}{\adjmatrixlayout}
+        \hline
+        \textbf{From\textbackslash To} & Alice   & Bob   & Charlie   & Dave   & Eve   & Fred   & George \\ \hline
+        Alice                          & 0       & 1     & 0         & 0      & 0     & 0      & 0 \\ \hline
+        Bob                            & 0       & 0     & 1         & 1      & 0     & 0      & 0 \\ \hline
+        Charlie                        & 1       & 1     & 0         & 1      & 0     & 0      & 0 \\ \hline
+        Dave                           & 0       & 0     & 0         & 0      & 1     & 0      & 0 \\ \hline
+        Eve                            & 0       & 0     & 0         & 1      & 0     & 0      & 0 \\ \hline
+        Fred                           & 0       & 0     & 0         & 1      & 0     & 0      & 1 \\ \hline
+        George                         & 0       & 0     & 0         & 0      & 0     & 0      & 0 \\ \hline
+    \end{tabular}
+\end{center}
+
+Матрицю суміжності легко побудувати (якщо присвоїти кожній вершині числовий індекс). Також вона швидко (за \(O(1)\)) може дати відповідь на питання «Чи існує ребро між вершинами \(v_i\) та \(v_j\)?»
+
+Проте, представлення графів матрицею суміжності має такі недоліки:
+\begin{itemize}
+    \item Нам завжди потрібно створювати матрицю розміром \(V \times V\). Це означає, що нам потрібно затрачати квадратичну кількість пам’яті відносно кількості вершин.
+    \item Часто нам потрібно перелічити всіх сусідів вершини \(v_i\). З матрицею суміжності, ми мусимо просканувати весь \(i\)-й рядок, щоб дати відповідь на це питання.
+    \item Матриця суміжності не може зберігати кратні ребра.
+\end{itemize}
+
+Інше поширене представлення --- \textbf{список суміжності} (adjacency list), при якому для кожної вершини вказується список ребер, які з неї виходять (або ж просто список суміжних вершин). Таким чином, ми використовуємо рівно стільки пам’яті, скільки у нас є елементів графу, а також можемо швидко отримати усі суміжні вершини.
+
+\begin{align*}
+    Alice:    & \  [Edge(Alice, Bob)] \\
+    Bob:      & \  [Edge(Bob, Charlie), Edge(Bob, Dave)] \\
+    Charlie:  & \  [Edge(Charlie, Alice), Edge(Charlie, Bob), Edge(Charlie, Dave)] \\
+    Dave:     & \  [Edge(Dave, Eve)] \\
+    Eve:      & \  [Edge(Eve, Dave)] \\
+    Fred:     & \  [Edge(Fred, Dave), Edge(Fred, George)] \\
+    George:   & \  []
+\end{align*}
+
+В коді ми можемо описати це так:
+
+\lstinputlisting{code/graph_repr_edge_list.py}
 
 \end{document}
