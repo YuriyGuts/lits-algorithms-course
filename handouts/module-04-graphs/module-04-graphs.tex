@@ -9,6 +9,7 @@
 
 % The pipe character gets overriden in the code style definition, specify the table header beforehand.
 \newcommand{\adjmatrixlayout}{|r|c|c|c|c|c|c|c|}
+\newcommand{\bfslayout}{r|lc}
 
 \input{../include/language.tex}
 \input{../include/styles.tex}
@@ -172,7 +173,7 @@
 
 Графи легко зобразити графічно, проте для того, щоб ефективно виконувати алгоритми на графах, ми повинні придумати спосіб представляти їх у коді та в пам’яті комп’ютера.
 
-Одним з популярних представлень графів є \textbf{матриця суміжності} (adjacency matrix). Вона передбачає, що ми створюємо матрицю \(V \times V\), де рядками є початкові вершини, а стовпцями --- кінцеві вершини. Якщо з вершини \(v_i\) до вершини \(v_j\) є ребро, тоді відповідна клітинка \(A_{ij} = 1\). У випадку зваженого графа, замість 1 буде стояти вага ребра \(w_{(v_i, v_j)}\). Якщо граф неорієнтований, тоді матриця буде симетричною відносно основної діагоналі: \(A_{ij} = A_{ji}\).
+Одним з популярних представлень графів є \textbf{матриця суміжності} (adjacency matrix). Вона передбачає, що ми створюємо матрицю \(V \times V\), де рядками є початкові вершини ребер, а стовпцями --- кінцеві вершини. Якщо з вершини \(v_i\) до вершини \(v_j\) є ребро, тоді відповідна клітинка \(A_{ij} = 1\). У випадку зваженого графа, замість 1 буде стояти вага ребра \(w_{(v_i, v_j)}\). Якщо граф неорієнтований, тоді матриця буде симетричною відносно основної діагоналі: \(A_{ij} = A_{ji}\).
 
 \begin{center}
     \begin{tikzpicture}
@@ -233,17 +234,128 @@
 Інше поширене представлення --- \textbf{список суміжності} (adjacency list), при якому для кожної вершини вказується список ребер, які з неї виходять (або ж просто список суміжних вершин). Таким чином, ми використовуємо рівно стільки пам’яті, скільки у нас є елементів графу, а також можемо швидко отримати усі суміжні вершини.
 
 \begin{align*}
-    Alice:    & \  [Edge(Alice, Bob)] \\
-    Bob:      & \  [Edge(Bob, Charlie), Edge(Bob, Dave)] \\
-    Charlie:  & \  [Edge(Charlie, Alice), Edge(Charlie, Bob), Edge(Charlie, Dave)] \\
-    Dave:     & \  [Edge(Dave, Eve)] \\
-    Eve:      & \  [Edge(Eve, Dave)] \\
-    Fred:     & \  [Edge(Fred, Dave), Edge(Fred, George)] \\
+    Alice:    & \  [Edge(Alice \rightarrow Bob)] \\
+    Bob:      & \  [Edge(Bob \rightarrow Charlie), Edge(Bob \rightarrow Dave)] \\
+    Charlie:  & \  [Edge(Charlie \rightarrow Alice), Edge(Charlie \rightarrow Bob), Edge(Charlie \rightarrow Dave)] \\
+    Dave:     & \  [Edge(Dave \rightarrow Eve)] \\
+    Eve:      & \  [Edge(Eve \rightarrow Dave)] \\
+    Fred:     & \  [Edge(Fred \rightarrow Dave), Edge(Fred \rightarrow George)] \\
     George:   & \  []
 \end{align*}
 
 В коді ми можемо описати це так:
 
 \lstinputlisting{code/graph_repr_edge_list.py}
+
+
+
+\section{Обхід графів}
+
+Коли ми мали справу з деревовидними структурами, обходити їх було нескладно. Достатньо було запустити рекурсивну функцію на кореневому вузлі, і вона рівно один раз відвідає кожен вузол, що лежить у цьому дереві.
+
+Проте дерева є лише частковим випадком графів. Графи можуть мати цикли і не мати чітко визначеного «кореневого» вузла, тому така функція обходу може виконуватися нескінченно. Тому ми мусимо трохи змінити стратегію обходу графу, щоб відвідати кожну вершину лише один раз.
+
+Існує дві стратегії обходу графів: \textbf{пошук в ширину} (Breadth-First Search, BFS) та \textbf{пошук у глибину} (Depth-First Search, DFS).
+
+Обидві стратегії передбачають, що ми оберемо вершину, з якої починатимемо обхід. При обході графа ми запам’ятовуємо всі вершини, де ми вже побували, і перед тим, як аналізувати будь-яку наступну вершину, перевіряємо, чи ми ще цього не зробили раніше.
+
+BFS працює таким чином:
+
+\begin{enumerate}
+    \item Кладемо стартову вершину в чергу.
+    \item Дістаємо вершину з черги. Якщо черга вже була порожньою, завершуємо алгоритм.
+    \item Перевіряємо, чи ми вже в ній були (\(visited(v) = 1?\)). Якщо так, повертаємося до пункту 2.
+    \item Перелічуємо всіх сусідів даної вершини. Усіх сусідів, де ми ще не були, кладемо в чергу.
+    \item Позначаємо вершину як уже відвідану (\(visited(v) = 1\)).
+    \item Повертаємося до пункту 2.
+\end{enumerate}
+
+\begin{center}
+    \begin{tikzpicture}
+    \footnotesize
+
+    \begin{scope}[every node/.style={basic}]
+    \node at (-1,1)   (alice)    {Alice};
+    \node at (1,3)    (bob)      {Bob};
+    \node at (3,0.5)  (charlie)  {Charlie};
+    \node at (6,2)    (dave)     {Dave};
+    \node at (9,2)    (eve)      {Eve};
+    \node at (6,-1)   (fred)     {Fred};
+    \node at (9,0)    (george)   {George};
+
+    \tikzset{directed/.style={draw,->,thick,-{Latex[length=2.5mm]}}}
+
+    \path (alice)    edge [directed]              (bob);
+    \path (bob)      edge [directed, bend right]  (charlie);
+    \path (charlie)  edge [directed]              (alice);
+    \path (charlie)  edge [directed, bend right]  (bob);
+    \path (bob)      edge [directed]              (dave);
+    \path (charlie)  edge [directed]              (dave);
+    \path (dave)     edge [directed, bend right]  (eve);
+    \path (dave)     edge [directed]              (fred);
+    \path (eve)      edge [directed, bend right]  (dave);
+    \path (fred)     edge [directed]              (george);
+
+    \end{scope}
+
+    \end{tikzpicture}
+\end{center}
+
+Для даного графа BFS буде виглядати так:
+
+\begin{center}
+    \scalebox{0.9} {
+        \begin{tabular}{\bfslayout}
+            \toprule
+            Відвідувана вершина   & Черга            & Відвіданість вершин     \\
+            \hline
+            (ініціалізація)       & [Alice]          & [0, 0, 0, 0, 0, 0, 0]   \\
+            \hline
+            Alice                 & [Bob]            & [1, 0, 0, 0, 0, 0, 0]   \\
+            Bob                   & [Charlie, Dave]  & [1, 1, 0, 0, 0, 0, 0]   \\
+            Charlie               & [Dave]           & [1, 1, 1, 0, 0, 0, 0]   \\
+            Dave                  & [Eve, Fred]      & [1, 1, 1, 1, 0, 0, 0]   \\
+            Eve                   & [Fred]           & [1, 1, 1, 1, 1, 0, 0]   \\
+            Fred                  & [George]         & [1, 1, 1, 1, 1, 1, 0]   \\
+            George                & []               & [1, 1, 1, 1, 1, 1, 1]   \\
+            \bottomrule
+        \end{tabular}
+    }
+\end{center}
+
+Єдина відмінність між BFS та DFS у тому, що для DFS самість черги використовується стек. Така, здавалося б, незначна відмінність сильно впливає на поведінку обходу:
+
+\begin{center}
+    \scalebox{0.9} {
+        \begin{tabular}{\bfslayout}
+            \toprule
+            Відвідувана вершина   & Стек                    & Відвіданість вершин     \\
+            \hline
+            (ініціалізація)       & [Alice]                 & [0, 0, 0, 0, 0, 0, 0]   \\
+            \hline
+            Alice                 & [Bob]                   & [1, 0, 0, 0, 0, 0, 0]   \\
+            Bob                   & [Charlie, Dave]         & [1, 1, 0, 0, 0, 0, 0]   \\
+            Dave                  & [Charlie, Eve, Fred]    & [1, 1, 0, 1, 0, 0, 0]   \\
+            Fred                  & [Charlie, Eve, George]  & [1, 1, 0, 1, 0, 1, 0]   \\
+            George                & [Charlie, Eve]          & [1, 1, 0, 1, 0, 1, 1]   \\
+            Eve                   & [Charlie]               & [1, 1, 0, 1, 1, 1, 1]   \\
+            Charlie               & []                      & [1, 1, 1, 1, 1, 1, 1]   \\
+            \bottomrule
+        \end{tabular}
+    }
+\end{center}
+
+Якщо проаналізувати, як ці два обходи відвідують вершини, можна помітити такі закономірності:
+\begin{itemize}
+    \item BFS відвідує усі вершини, до яких можна дістатися за 1 хід, тільки після цього --- усі вершини, до яких можна дістатися за 2 ходи, потім за 3, і т.д.
+    \item DFS навмання йде вглиб графу, доки не «застрягне», після чого повертається до попереднього «роздоріжжя» і знову йде вглиб, і це триває доти, доки всі вершини не будуть відвідані.
+\end{itemize}
+
+Ці властивості використовуються як основа для складніших алгоритмів. Наприклад:
+
+\begin{itemize}
+    \item За допомогою DFS можна генерувати лабіринти. Спочатку наш лабіринт має всі 4 стіни в кожній клітинці. Ми проходимо по клітинках за допомогою DFS. Коли ми потрапляємо в нову клітинку, ми «ламаємо» стіну між нею і попередньою клітинкою. Щоб зробити лабіринт цікавішим, ми кладемо сусідів у стек у довільному порядку.
+    \item За допомогою BFS можна знаходити найкоротші шляхи у незваженому графі. Таким чином, ми можемо розв’язати лабіринт, який щойно згенерували.
+\end{itemize}
 
 \end{document}
