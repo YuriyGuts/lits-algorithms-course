@@ -1,0 +1,27 @@
+-- Datasets: http://neo4j.com/developer/example-data/
+-- Movie dataset
+
+-- Find all movies with Al Pacino and Robert De Niro acting together.
+MATCH (pacino: Actor {name: "Al Pacino"})-[:ACTS_IN]->(movie)<-[:ACTS_IN]-(deniro: Actor {name: "Robert De Niro"})
+RETURN pacino, movie, deniro
+
+-- Calculate Kevin Bacon number for actor.
+MATCH path=shortestPath(
+    (target: Actor {name: "Al Pacino"})-[*]-(bacon: Actor {name: "Kevin Bacon"})
+) RETURN path, length(path) / 2 AS baconNumber
+
+-- Actors by Kevin Bacon number descending.
+MATCH path=shortestPath(
+    (target: Actor)-[*]-(bacon: Actor {name: "Kevin Bacon"})
+) RETURN target.name, length(path) / 2 AS baconNumber
+ORDER BY baconNumber DESC
+LIMIT 500
+
+-- Recommend a partner for Kevin Bacon based on Bacon's partners' movies.
+MATCH (bacon: Actor {name: "Kevin Bacon"})-[:ACTS_IN]->(baconMovie)<-[:ACTS_IN]-(baconPartner: Actor),
+      (baconPartner: Actor)-[:ACTS_IN]->(nonBaconMovie)<-[:ACTS_IN]-(nonBaconPartner: Actor)
+WHERE NOT (bacon)-[:ACTS_IN]->(nonBaconMovie)
+  AND NOT (nonBaconPartner)-[:ACTS_IN]->()<-[:ACTS_IN]-(bacon)
+RETURN nonBaconPartner.name AS Recommended,
+count(*) AS RecommendationStrength
+ORDER BY RecommendationStrength DESC LIMIT 20
