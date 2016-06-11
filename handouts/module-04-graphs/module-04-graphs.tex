@@ -22,6 +22,9 @@
     basic/.style = {draw, text width=30pt, circle, align=center}
 }
 \tikzset{
+    small/.style = {draw, text width=20pt, circle, align=center}
+}
+\tikzset{
     blank/.style = {text width=30pt, align=center}
 }
 
@@ -34,6 +37,8 @@
 \let\clearpage\relax
 \tableofcontents
 \endgroup
+
+\pagebreak
 
 
 
@@ -605,6 +610,133 @@ BFS працює таким чином:
         \end{scope}
     \end{tikzpicture}
 \end{center}
+
+Алгоритм A* широко застосовується для задач навігації в в комп’ютерних іграх чи плануванні руху роботів.
+
+
+
+\section{Мінімальні каркасні дерева}
+
+Розглянемо ще один приклад задачі на неорієнтованих зважених графах.
+
+Уявімо, що ми --- інтернет-провайдер, і ми бажаємо з’єднати кілька міст в комп’ютерну мережу за мінімальну вартість. Можливі варіанти прокладення ліній зв’язку зображені на графі, де ваги --- вартість прокладання лінії.
+
+\begin{center}
+    \begin{tikzpicture}
+    \footnotesize
+
+    \begin{scope}[every node/.style={small}]
+    \node at (0.0,0.0)    (A) {A};
+    \node at (-1.0,-2.5)  (B) {B};
+    \node at (0.0,-5.0)   (C) {C};
+    \node at (2.0,-3.0)   (D) {D};
+    \node at (6.0,-3.0)   (E) {E};
+    \node at (4.0,-1.0)   (F) {F};
+    \node at (9.0,0.0)    (G) {G};
+    \node at (9.0,-4.0)   (H) {H};
+    \node at (6.0,-5.5)   (I) {I};
+    \node at (8.0,-7.0)   (J) {J};
+    \end{scope}
+
+    \tikzset{undirected/.style={draw, thick, inner sep=5pt}}
+
+    \path (A)   edge [undirected]   node [right] {3}    (B);
+    \path (A)   edge [undirected]   node [above] {2}    (F);
+    \path (B)   edge [undirected]   node [right] {17}   (C);
+    \path (B)   edge [undirected]   node [above] {16}   (D);
+    \path (C)   edge [undirected]   node [right] {8}    (D);
+    \path (C)   edge [undirected]   node [above] {18}   (I);
+    \path (D)   edge [undirected]   node [above] {11}   (E);
+    \path (D)   edge [undirected]   node [above] {4}    (I);
+    \path (E)   edge [undirected]   node [right] {1}    (F);
+    \path (E)   edge [undirected]   node [right] {6}    (G);
+    \path (E)   edge [undirected]   node [above] {5}    (H);
+    \path (E)   edge [undirected]   node [right] {10}   (I);
+    \path (F)   edge [undirected]   node [above] {7}    (G);
+    \path (G)   edge [undirected]   node [right] {15}   (H);
+    \path (H)   edge [undirected]   node [below] {12}   (I);
+    \path (H)   edge [undirected]   node [right] {13}   (J);
+    \path (I)   edge [undirected]   node [below] {9}    (J);
+
+
+    \end{tikzpicture}
+\end{center}
+
+Таким чином, ми хочемо залишити тільки ті ребра, при яких граф залишиться зв’язним, і сума їх ваг буде мінімальною з усіх можливих:
+
+\begin{center}
+    \begin{tikzpicture}
+    \footnotesize
+
+    \begin{scope}[every node/.style={small}]
+    \node at (0.0,0.0)    (A) {A};
+    \node at (-1.0,-2.5)  (B) {B};
+    \node at (0.0,-5.0)   (C) {C};
+    \node at (2.0,-3.0)   (D) {D};
+    \node at (6.0,-3.0)   (E) {E};
+    \node at (4.0,-1.0)   (F) {F};
+    \node at (9.0,0.0)    (G) {G};
+    \node at (9.0,-4.0)   (H) {H};
+    \node at (6.0,-5.5)   (I) {I};
+    \node at (8.0,-7.0)   (J) {J};
+    \end{scope}
+
+    \tikzset{undirected/.style={draw, thick, inner sep=5pt}}
+
+    \path (A)   edge [undirected, color=red]   node [right] {3}    (B);
+    \path (A)   edge [undirected, color=red]   node [above] {2}    (F);
+    \path (B)   edge [undirected]              node [right] {17}   (C);
+    \path (B)   edge [undirected]              node [above] {16}   (D);
+    \path (C)   edge [undirected, color=red]   node [right] {8}    (D);
+    \path (C)   edge [undirected]              node [above] {18}   (I);
+    \path (D)   edge [undirected]              node [above] {11}   (E);
+    \path (D)   edge [undirected, color=red]   node [above] {4}    (I);
+    \path (E)   edge [undirected, color=red]   node [right] {1}    (F);
+    \path (E)   edge [undirected, color=red]   node [right] {6}    (G);
+    \path (E)   edge [undirected, color=red]   node [above] {5}    (H);
+    \path (E)   edge [undirected, color=red]   node [right] {10}   (I);
+    \path (F)   edge [undirected]              node [above] {7}    (G);
+    \path (G)   edge [undirected]              node [right] {15}   (H);
+    \path (H)   edge [undirected]              node [below] {12}   (I);
+    \path (H)   edge [undirected]              node [right] {13}   (J);
+    \path (I)   edge [undirected, color=red]   node [below] {9}    (J);
+
+    \end{tikzpicture}
+\end{center}
+
+Такий підграф називається \textbf{мінімальним каркасним деревом} (Minimum Spanning Tree, MST). Очевидно, що кількість ребер у MST буде дорівнювати \(V - 1\).
+
+Існують два прості жадібні алгоритми, які здатні побудувати MST. Це \textbf{алгоритм Прима} та \textbf{алгоритм Краскала}.
+
+Алгоритм Прима: додаємо довільну вершину до MST. З-поміж усіх ребер, де один кінець вже належить до MST, а інший --- ні, вибираємо ребро мінімальної ваги. Повторюємо, доки ребер в MST не стане \(V - 1\).
+
+Подібно до алгоритму Дейкстри, ми маємо проблему з пошуком мінімуму на кожній ітерації. Тому ми можемо занести всі ребра в піраміду (min-heap), таким чином відразу дістаючи ребро мінімальної ваги.
+
+\lstinputlisting{code/mst_prim.py}
+
+Алгоритм Краскала: сортуємо всі ребра за вагою. Включаємо до MST найдешевше ребро, якщо воно не утворює циклу в MST. Повторюємо, доки кількість ребер у MST не стане дорівнювати \(V - 1\).
+
+Найскладніша частина в цьому алгоритмі --- як швидко перевірити, чи нове ребро не утворить циклу в MST? Для цього нам стане в пригоді структура даних \textbf{Union-Find} (Disjoint Set). Вона дозволяє зберігати окремі групи елементів, пам’ятаючи належність кожного елемента до групи. Ми можемо в ході роботи програми об’єднувати ці групи одну з одною назавжди. Тобто, ця структура підтримує дві операції:
+
+\begin{itemize}
+    \item \(Find(e)\) --- визначити, до якої групи належить елемент \(e\).
+    \item \(Union(g_1, g_2)\) --- об’єднати групи \(g_1\) та \(g_2\).
+\end{itemize}
+
+Таким чином, алгоритм Краскала з використанням Union-Find буде виглядати так:
+
+\begin{enumerate}
+    \item Заносимо всі вершини в Union-Find.
+    \item Сортуємо всі ребра за зростанням ваги.
+    \item Обираємо найдешевше ребро. Якщо \(Find(v_{start}) \neq Find(v_{end})\), ребро не утворює циклу. Інакше --- обираємо наступне, дорожче ребро.
+    \item Додаємо ребро до MST, викликаємо \(Union(v_{start}, v_{end})\).
+    \item Повторюємо, доки ребер в МST не стане \(V - 1\).
+\end{enumerate}
+
+\lstinputlisting{code/mst_kruskal.py}
+
+Існує кілька реалізацій структури даних Union-Find, відповідно, це впливатиме на швидкодію алгоритму Краскала. Типово, від якісних реалізацій алгоритму Прима та Краскала можна очікувати швидкодію \(O(E \log V)\).
+
 
 
 \end{document}
