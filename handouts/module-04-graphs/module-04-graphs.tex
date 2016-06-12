@@ -6,6 +6,7 @@
 
 \usetikzlibrary{arrows.meta}
 \usetikzlibrary{shapes.misc}
+\usetikzlibrary{matrix}
 
 % The pipe character gets overriden in the code style definition, specify the table header beforehand.
 \newcommand{\adjmatrixlayout}{|r|c|c|c|c|c|c|c|}
@@ -26,6 +27,12 @@
 }
 \tikzset{
     blank/.style = {text width=30pt, align=center}
+}
+\tikzset{
+    undirected/.style = {draw, thick, inner sep=5pt}
+}
+\tikzset{
+    directed/.style = {draw, ->, thick, -{Latex[length=2.5mm]}}
 }
 
 \begin{document}
@@ -63,8 +70,6 @@
     \node at (6,-1)   (fred)     {Fred};
     \node at (9,0)    (george)   {George};
 
-    \tikzset{undirected/.style={draw,thick}}
-
     \path (alice)    edge [undirected]   (bob);
     \path (bob)      edge [undirected]   (charlie);
     \path (charlie)  edge [undirected]   (alice);
@@ -93,8 +98,6 @@
     \node at (9,2)    (eve)      {Eve};
     \node at (6,-1)   (fred)     {Fred};
     \node at (9,0)    (george)   {George};
-
-    \tikzset{directed/.style={draw,->,thick,-{Latex[length=2.5mm]}}}
 
     \path (alice)    edge [directed]              (bob);
     \path (bob)      edge [directed, bend right]  (charlie);
@@ -132,8 +135,6 @@
     \node at (6,-1)       (khreshchatyk)            {Хрещатик};
     \node at (9,-3.5)     (arsenalna)               {Арсенальна};
     \end{scope}
-
-    \tikzset{undirected/.style={draw, thick, inner sep=5pt}}
 
     \path (lukianivska)             edge [undirected]  node [right] {5}   (zoloti-vorota);
     \path (zoloti-vorota)           edge [undirected]  node [above] {3}   (palats-sportu);
@@ -195,8 +196,6 @@
     \node at (9,2)    (eve)      {Eve};
     \node at (6,-1)   (fred)     {Fred};
     \node at (9,0)    (george)   {George};
-
-    \tikzset{directed/.style={draw,->,thick,-{Latex[length=2.5mm]}}}
 
     \path (alice)    edge [directed]              (bob);
     \path (bob)      edge [directed, bend right]  (charlie);
@@ -291,8 +290,6 @@ BFS працює таким чином:
     \node at (6,-1)   (fred)     {Fred};
     \node at (9,0)    (george)   {George};
 
-    \tikzset{directed/.style={draw,->,thick,-{Latex[length=2.5mm]}}}
-
     \path (alice)    edge [directed]              (bob);
     \path (bob)      edge [directed, bend right]  (charlie);
     \path (charlie)  edge [directed]              (alice);
@@ -303,7 +300,6 @@ BFS працює таким чином:
     \path (dave)     edge [directed]              (fred);
     \path (eve)      edge [directed, bend right]  (dave);
     \path (fred)     edge [directed]              (george);
-
     \end{scope}
 
     \end{tikzpicture}
@@ -422,31 +418,18 @@ BFS працює таким чином:
         \begin{scope}[every node/.style={blank}]
             \draw[step=1cm,gray,very thin] (0,0) grid (5,5);
 
-            \node at (0.5,0.5) (n11) {|2|};
-            \node at (1.5,0.5) (n21) {|1|};
-            \node at (2.5,0.5) (n31) {|2|};
-            \node at (3.5,0.5) (n41) {|3|};
-            \node at (4.5,0.5) (n51) {|4|};
-            \node at (0.5,1.5) (n12) {|1|};
-            \node at (1.5,1.5) (n22) {};
-            \node at (2.5,1.5) (n32) {|1|};
-            \node at (3.5,1.5) (n42) {|2|};
-            \node at (4.5,1.5) (n52) {|3|};
-            \node at (0.5,2.5) (n13) {|2|};
-            \node at (1.5,2.5) (n23) {|1|};
-            \node at (2.5,2.5) (n33) {|2|};
-            \node at (3.5,2.5) (n43) {|3|};
-            \node at (4.5,2.5) (n53) {|4|};
-            \node at (0.5,3.5) (n14) {|3|};
-            \node at (1.5,3.5) (n24) {|2|};
-            \node at (2.5,3.5) (n34) {|3|};
-            \node at (3.5,3.5) (n44) {|4|};
-            \node at (4.5,3.5) (n54) {};
-            \node at (0.5,4.5) (n15) {|4|};
-            \node at (1.5,4.5) (n25) {|3|};
-            \node at (2.5,4.5) (n35) {|4|};
-            \node at (3.5,4.5) (n45) {};
-            \node at (4.5,4.5) (n55) {};
+            \matrix[matrix of nodes,
+            shift={(2.5,2.88)},
+            inner sep=0pt,
+            anchor=center,
+            nodes={inner sep=0pt,text width=1cm,align=center,text height=1cm}
+            ]{
+                {|4|} & {|3|} & {|4|} & {| |} & {| |} \\
+                {|3|} & {|2|} & {|3|} & {|4|} & {| |} \\
+                {|2|} & {|1|} & {|2|} & {|3|} & {|4|} \\
+                {|1|} & {| |} & {|1|} & {|2|} & {|3|} \\
+                {|2|} & {|1|} & {|2|} & {|3|} & {|4|} \\
+            };
 
             \node at (1.5,1.5) (A) [color=black!20!red] {|A(0)|};
             \node at (3.5,4.5) (B) [color=black!50!green] {|B(5)|};
@@ -475,31 +458,18 @@ BFS працює таким чином:
             \draw[step=1cm,gray,very thin] (-6,0) grid (-1,5);
             \node at (-4.5,5.7) {\(DistanceSoFar\)};
 
-            \node at (-5.5,0.5) {|2|};
-            \node at (-4.5,0.5) {|1|};
-            \node at (-3.5,0.5) {|2|};
-            \node at (-2.5,0.5) {|3|};
-            \node at (-1.5,0.5) {|4|};
-            \node at (-5.5,1.5) {|1|};
-            \node at (-4.5,1.5) {};
-            \node at (-3.5,1.5) {|1|};
-            \node at (-2.5,1.5) {|2|};
-            \node at (-1.5,1.5) {|3|};
-            \node at (-5.5,2.5) {|2|};
-            \node at (-4.5,2.5) {|1|};
-            \node at (-3.5,2.5) {|2|};
-            \node at (-2.5,2.5) {|3|};
-            \node at (-1.5,2.5) {|4|};
-            \node at (-5.5,3.5) {|3|};
-            \node at (-4.5,3.5) {|2|};
-            \node at (-3.5,3.5) {|3|};
-            \node at (-2.5,3.5) {|4|};
-            \node at (-1.5,3.5) {|5|};
-            \node at (-5.5,4.5) {|4|};
-            \node at (-4.5,4.5) {|3|};
-            \node at (-3.5,4.5) {|4|};
-            \node at (-2.5,4.5) {};
-            \node at (-1.5,4.5) {|6|};
+            \matrix[matrix of nodes,
+            shift={(-3.5,2.88)},
+            inner sep=0pt,
+            anchor=center,
+            nodes={inner sep=0pt,text width=1cm,align=center,text height=1cm}
+            ]{
+                {|4|} & {|3|} & {|4|} & {| |} & {|6|} \\
+                {|3|} & {|2|} & {|3|} & {|4|} & {|5|} \\
+                {|2|} & {|1|} & {|2|} & {|3|} & {|4|} \\
+                {|1|} & {| |} & {|1|} & {|2|} & {|3|} \\
+                {|2|} & {|1|} & {|2|} & {|3|} & {|4|} \\
+            };
 
             \node at (-4.5,1.5) [color=black!20!red] {|A|};
             \node at (-2.5,4.5) [color=black!50!green] {|B|};
@@ -507,31 +477,18 @@ BFS працює таким чином:
             \draw[step=1cm,gray,very thin] (-0,0) grid (5,5);
             \node at (1.1,5.7) {\(RemainingEstimate\)};
 
-            \node at (0.5,0.5) {|7|};
-            \node at (1.5,0.5) {|6|};
-            \node at (2.5,0.5) {|5|};
-            \node at (3.5,0.5) {|4|};
-            \node at (4.5,0.5) {|5|};
-            \node at (0.5,1.5) {|6|};
-            \node at (1.5,1.5) {};
-            \node at (2.5,1.5) {|4|};
-            \node at (3.5,1.5) {|3|};
-            \node at (4.5,1.5) {|4|};
-            \node at (0.5,2.5) {|5|};
-            \node at (1.5,2.5) {|4|};
-            \node at (2.5,2.5) {|3|};
-            \node at (3.5,2.5) {|2|};
-            \node at (4.5,2.5) {|3|};
-            \node at (0.5,3.5) {|4|};
-            \node at (1.5,3.5) {|3|};
-            \node at (2.5,3.5) {|2|};
-            \node at (3.5,3.5) {|1|};
-            \node at (4.5,3.5) {|2|};
-            \node at (0.5,4.5) {|3|};
-            \node at (1.5,4.5) {|2|};
-            \node at (2.5,4.5) {|1|};
-            \node at (3.5,4.5) {};
-            \node at (4.5,4.5) {|1|};
+            \matrix[matrix of nodes,
+            shift={(2.5,2.88)},
+            inner sep=0pt,
+            anchor=center,
+            nodes={inner sep=0pt,text width=1cm,align=center,text height=1cm}
+            ]{
+                {|3|} & {|2|} & {|1|} & {| |} & {|1|} \\
+                {|4|} & {|3|} & {|2|} & {|1|} & {|2|} \\
+                {|5|} & {|4|} & {|3|} & {|2|} & {|3|} \\
+                {|6|} & {| |} & {|4|} & {|3|} & {|4|} \\
+                {|7|} & {|6|} & {|5|} & {|4|} & {|5|} \\
+            };
 
             \node at (1.5,1.5) [color=black!20!red] {|A|};
             \node at (3.5,4.5) [color=black!50!green] {|B|};
@@ -539,31 +496,18 @@ BFS працює таким чином:
             \draw[step=1cm,gray,very thin] (6,0) grid (11,5);
             \node at (8.1,5.7) {\(TotalCost\)};
 
-            \node at (6.5,0.5) {|9|};
-            \node at (7.5,0.5) {|7|};
-            \node at (8.5,0.5) {|7|};
-            \node at (9.5,0.5) {|7|};
-            \node at (10.5,0.5) {|9|};
-            \node at (6.5,1.5) {|7|};
-            \node at (7.5,1.5) {};
-            \node at (8.5,1.5) {|5|};
-            \node at (9.5,1.5) {|5|};
-            \node at (10.5,1.5) {|7|};
-            \node at (6.5,2.5) {|7|};
-            \node at (7.5,2.5) {|5|};
-            \node at (8.5,2.5) {|5|};
-            \node at (9.5,2.5) {|5|};
-            \node at (10.5,2.5) {|7|};
-            \node at (6.5,3.5) {|7|};
-            \node at (7.5,3.5) {|5|};
-            \node at (8.5,3.5) {|5|};
-            \node at (9.5,3.5) {|5|};
-            \node at (10.5,3.5) {|7|};
-            \node at (6.5,4.5) {|7|};
-            \node at (7.5,4.5) {|5|};
-            \node at (8.5,4.5) {|5|};
-            \node at (9.5,4.5) {};
-            \node at (10.5,4.5) {|7|};
+            \matrix[matrix of nodes,
+            shift={(8.5,2.88)},
+            inner sep=0pt,
+            anchor=center,
+            nodes={inner sep=0pt,text width=1cm,align=center,text height=1cm}
+            ]{
+                {|7|} & {|5|} & {|5|} & {| |} & {|7|} \\
+                {|7|} & {|5|} & {|5|} & {|5|} & {|7|} \\
+                {|7|} & {|5|} & {|5|} & {|5|} & {|7|} \\
+                {|7|} & {| |} & {|5|} & {|5|} & {|7|} \\
+                {|9|} & {|7|} & {|7|} & {|7|} & {|9|} \\
+            };
 
             \node at (7.5,1.5) [color=black!20!red] {|A|};
             \node at (9.5,4.5) [color=black!50!green] {|B|};
@@ -578,31 +522,19 @@ BFS працює таким чином:
     \begin{tikzpicture}
         \begin{scope}[every node/.style={blank}]
             \draw[step=1cm,gray,very thin] (0,0) grid (5,5);
-            \node at (0.5,0.5) {};
-            \node at (1.5,0.5) {};
-            \node at (2.5,0.5) {};
-            \node at (3.5,0.5) {};
-            \node at (4.5,0.5) {};
-            \node at (0.5,1.5) {};
-            \node at (1.5,1.5) {};
-            \node at (2.5,1.5) {|5|};
-            \node at (3.5,1.5) {|5|};
-            \node at (4.5,1.5) {};
-            \node at (0.5,2.5) {};
-            \node at (1.5,2.5) {|5|};
-            \node at (2.5,2.5) {|5|};
-            \node at (3.5,2.5) {|5|};
-            \node at (4.5,2.5) {};
-            \node at (0.5,3.5) {};
-            \node at (1.5,3.5) {|5|};
-            \node at (2.5,3.5) {|5|};
-            \node at (3.5,3.5) {|5|};
-            \node at (4.5,3.5) {};
-            \node at (0.5,4.5) {};
-            \node at (1.5,4.5) {|5|};
-            \node at (2.5,4.5) {|5|};
-            \node at (3.5,4.5) {};
-            \node at (4.5,4.5) {};
+
+            \matrix[matrix of nodes,
+            shift={(2.5,2.88)},
+            inner sep=0pt,
+            anchor=center,
+            nodes={inner sep=0pt,text width=1cm,align=center,text height=1cm}
+            ]{
+                {| |} & {|5|} & {|5|} & {| |} & {| |} \\
+                {| |} & {|5|} & {|5|} & {|5|} & {| |} \\
+                {| |} & {|5|} & {|5|} & {|5|} & {| |} \\
+                {| |} & {| |} & {|5|} & {|5|} & {| |} \\
+                {| |} & {| |} & {| |} & {| |} & {| |} \\
+            };
 
             \node at (1.5,1.5) [color=black!20!red] {|A|};
             \node at (3.5,4.5) [color=black!50!green] {|B|};
@@ -638,8 +570,6 @@ BFS працює таким чином:
     \node at (8.0,-7.0)   (J) {J};
     \end{scope}
 
-    \tikzset{undirected/.style={draw, thick, inner sep=5pt}}
-
     \path (A)   edge [undirected]   node [right] {3}    (B);
     \path (A)   edge [undirected]   node [above] {2}    (F);
     \path (B)   edge [undirected]   node [right] {17}   (C);
@@ -657,7 +587,6 @@ BFS працює таким чином:
     \path (H)   edge [undirected]   node [below] {12}   (I);
     \path (H)   edge [undirected]   node [right] {13}   (J);
     \path (I)   edge [undirected]   node [below] {9}    (J);
-
 
     \end{tikzpicture}
 \end{center}
@@ -680,8 +609,6 @@ BFS працює таким чином:
     \node at (6.0,-5.5)   (I) {I};
     \node at (8.0,-7.0)   (J) {J};
     \end{scope}
-
-    \tikzset{undirected/.style={draw, thick, inner sep=5pt}}
 
     \path (A)   edge [undirected, color=red]   node [right] {3}    (B);
     \path (A)   edge [undirected, color=red]   node [above] {2}    (F);
@@ -737,6 +664,51 @@ BFS працює таким чином:
 
 Існує кілька реалізацій структури даних Union-Find, відповідно, це впливатиме на швидкодію алгоритму Краскала. Типово, від якісних реалізацій алгоритму Прима та Краскала можна очікувати швидкодію \(O(E \log V)\).
 
+
+
+\section{DAG і топологічне сортування}
+
+Орієнтовані графи без циклів виділяють в окрему групу --- Directed Acyclic Graphs (DAG). Вони часто використовуються для планування задач та представлення залежностей між ними.
+
+Наприклад, уявімо, що у нас є програмний проект, який складається з окремих модулів. Ці модулі можуть залежати одне від одного --- наприклад, щоб скомпілювати модуль \(A\), потрібно спочатку скомпілювати модулі \(B\) та \(C\). Проте модулі \(B\) та \(C\) можуть також залежати від інших модулів. Нам потрібно з’ясувати, в якому порядку компілювати модулі так, щоб успішно скомпілювати весь проект.
+
+\begin{center}
+    \begin{tikzpicture}
+    \footnotesize
+
+    \begin{scope}[every node/.style={basic}]
+    \node at (-1,1)   (A)  {A};
+    \node at (2,3)    (B)  {B};
+    \node at (3,0.5)  (C)  {C};
+    \node at (6,2)    (D)  {D};
+    \node at (9,1)    (E)  {E};
+    \node at (6,-1)   (F)  {F};
+    \node at (9,-2)    (G)  {G};
+    \end{scope}
+
+    \path (A)   edge [directed]   (B);
+    \path (A)   edge [directed]   (C);
+    \path (B)   edge [directed]   (D);
+    \path (C)   edge [directed]   (D);
+    \path (D)   edge [directed]   (E);
+    \path (D)   edge [directed]   (F);
+    \path (D)   edge [directed]   (G);
+    \path (C)   edge [directed]   (F);
+
+    \end{tikzpicture}
+\end{center}
+
+Один з можливих порядків компіляції: \(G, E, F, D, C, B, A\).
+
+Таке впорядкування графу називається \textbf{топологічним сортуванням}. Зрозуміло, що воно існує лише для DAG, тому що циклічні залежності неможливо задовільнити.
+
+Топологічне сортування можна швидко виконати за допомогою DFS. Якщо ми бажаємо, щоб процедура топологічного сортування могла виявляти циклічність у графах і повідомляти про це, тоді нам потрібно дещо змінити DFS так, щоб кожен вузол мав три стани: not visited (не відвіданий), visited (відвіданий), resolved (відвіданий і всі залежності були відвідані й виконані) (Tarjan, 1976).
+
+Щоб топологічний порядок був менш хаотичним, можна спочатку знайти на графі усі вершини, що не мають жодних вхідних ребер, і запустити DFS із цих вершин.
+
+Також, для великих графів є сенс замінити рекурсивний варіант DFS на ітеративний, щоб уникнути переповнення стеку.
+
+\lstinputlisting{code/topological_sort.py}
 
 
 \end{document}
