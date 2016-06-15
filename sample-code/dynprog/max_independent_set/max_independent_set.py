@@ -36,7 +36,7 @@ def solve(weights):
 def reconstruct_solution(solutions):
     indices_to_include = []
 
-    # Starting from the last element and stepping backwards, following the winning case every time.
+    # We start from the last element and step backwards, following the winning case every time.
     i = len(solutions) - 1
     while i >= 1:
         case_1_wins = solutions[i] == solutions[i - 1]
