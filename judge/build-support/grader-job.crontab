@@ -5,6 +5,9 @@ JUDGE_ROOT=/opt/lits-algorithms-judge
 LOG_ROOT=/opt/lits-algorithms-judge/logs
 REPORT_ROOT=/opt/lits-algorithms-judge/reports
 
+JAVA_HOME=/usr/lib/jvm/java-8-oracle
+NODE_PATH=/usr/lib/nodejs:/usr/lib/node_modules:/usr/share/javascript
+
 # Every hour, update student repos, grade all solutions, and deploy reports to S3.
 0  *  *  *  *   cd "$JUDGE_ROOT/student-repos" && ./grader-job-run-all.py > "$LOG_ROOT/$(date +\%Y-\%m-\%d-\%H-\%M-\%S).out"
 

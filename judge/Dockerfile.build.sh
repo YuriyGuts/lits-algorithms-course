@@ -22,7 +22,7 @@ apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E0328081BF
 echo "deb http://download.mono-project.com/repo/debian wheezy main" | tee /etc/apt/sources.list.d/mono-xamarin.list
 
 # Node.js
-curl -L https://raw.githubusercontent.com/nodesource/distributions/master/deb/setup_5.x | bash -
+curl -L https://raw.githubusercontent.com/nodesource/distributions/master/deb/setup_6.x | bash -
 
 # Ruby
 gpg --keyserver hkp://keys.gnupg.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3
@@ -40,7 +40,7 @@ apt-get -y install oracle-java8-installer && echo 'JAVA_HOME=/usr/lib/jvm/java-8
 apt-get -y install mono-complete
 
 # Node.js
-apt-get -y install nodejs
+apt-get -y install nodejs && npm install -g big-integer
 
 # Ruby
 curl -sSL https://get.rvm.io | bash -s stable --ruby=2.3.0
