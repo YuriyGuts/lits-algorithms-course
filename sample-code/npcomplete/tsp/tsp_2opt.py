@@ -20,13 +20,13 @@ def main():
         ui.draw_points(points)
 
     def begin_solving_2opt():
-        def on_segments_optimized(suboptimal_segments, optimized_segments, new_tour):
-            for segment in suboptimal_segments:
-                ui.draw_segment(segment[0], segment[1], ui.color_suboptimal_segment)
+        def on_segments_optimized(worse_segments, better_segments, new_tour):
+            for segment in worse_segments:
+                ui.draw_segment(segment[0], segment[1], ui.color_worse_segment)
             ui.do_animation_delay()
 
-            for segment in optimized_segments:
-                ui.draw_segment(segment[0], segment[1], ui.color_optimized_segment)
+            for segment in better_segments:
+                ui.draw_segment(segment[0], segment[1], ui.color_better_segment)
             ui.do_animation_delay()
 
             ui.draw_tour(new_tour)
@@ -71,7 +71,7 @@ def slice_tour(tour, start_point_index, end_point_index):
 def solve_2opt(points, segments_optimized_callback):
     # Our first approximation is just a random tour.
     current_tour = points[:]
-    segments_optimized_callback(suboptimal_segments=[], optimized_segments=[], new_tour=current_tour)
+    segments_optimized_callback(worse_segments=[], better_segments=[], new_tour=current_tour)
 
     # Starting from that, we'll look for crossing segments in our path, and optimize them like this:
     #
@@ -106,8 +106,8 @@ def solve_2opt(points, segments_optimized_callback):
                         better_tour = list(reversed(slice_tour(current_tour, i_neighbor, j))) + slice_tour(current_tour, j_neighbor, i)
                         better_tour_found = True
                         segments_optimized_callback(
-                            suboptimal_segments=[[point1, neighbor1], [point2, neighbor2]],
-                            optimized_segments=[[point1, point2], [neighbor1, neighbor2]],
+                            worse_segments=[[point1, neighbor1], [point2, neighbor2]],
+                            better_segments=[[point1, point2], [neighbor1, neighbor2]],
                             new_tour=better_tour
                         )
                         break
@@ -125,8 +125,8 @@ class UI:
     color_canvas_background = "#FFFFFF"
     color_point = "#000000"
     color_segment = "#000000"
-    color_suboptimal_segment = "#D80000"
-    color_optimized_segment = "#00CC00"
+    color_worse_segment = "#D80000"
+    color_better_segment = "#00CC00"
 
     point_radius = 3
     segment_width = 3
