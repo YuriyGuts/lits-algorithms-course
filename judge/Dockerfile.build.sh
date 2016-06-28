@@ -40,7 +40,7 @@ apt-get -y install oracle-java8-installer && echo 'JAVA_HOME=/usr/lib/jvm/java-8
 apt-get -y install mono-complete
 
 # Node.js
-apt-get -y install nodejs && npm install -g big-integer
+apt-get -y install nodejs && npm install -g bn.js
 
 # Ruby
 curl -sSL https://get.rvm.io | bash -s stable --ruby=2.3.0
