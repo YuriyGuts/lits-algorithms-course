@@ -1,6 +1,7 @@
 \documentclass[12pt,a4paper]{report}
 
 \usepackage{amsmath}
+\usepackage{tikz}
 
 \input{../include/language.tex}
 \input{../include/styles.tex}
@@ -111,5 +112,36 @@
 \end{itemize}
 
 
+
+\section{Проблема P \(\stackrel{?}{=}\) NP}
+
+Пригадаймо, що належність задачі до NP не означає, що її неможливо вирішити за P-час --- просто такий алгоритм, можливо, ще не винайдений. Якщо ж такого алгоритму не існує (P \(\neq\) NP), то тоді класи задач, які ми розглядали вище, можна зобразити такою діаграмою:
+
+\begin{center}
+    \begin{tikzpicture}
+        \draw (0, 0) circle (1.5cm);
+        \draw (-2, 3) .. controls (-1, -0.2) and (1, -0.2) .. (2, 3);
+        \draw (0, -1) ellipse (0.9cm and 0.5cm);
+
+        \node at (0, -1)     {|P|};
+        \node at (0, 0)      {|NP|};
+        \node at (0, 1.05)   {|NPC|};
+        \node at (0, 2.5)    {|NPH|};
+    \end{tikzpicture}
+\end{center}
+
+Еквівалентність класів P та NP зараз є найважливішим невирішеним питанням в теорії алгоритмів. Це питання належить до «проблем тисячоліття» і передбачає винагороду \$1 млн. за доведення, що P дорівнює чи не дорівнює NP. Дійсно, оскільки всі NP-повні задачі зводяться одна до одної, достатньо розв’язати лише одну задачу за P-час --- і ми автоматично розв’яжемо \emph{всі} NP-повні задачі за P-час.
+
+Вплив P = NP на науку та індустрію був би величезним, оскільки багато криптографічних алгоритмів базуються на NP-повноті задачі розшифрування, і тому практично всі сучасні системи безпеки стануть непридатними. Задачі оптимізації (логістика, виробництво тощо) зможуть бути вирішені значно швидше і економічно ефективніше. Це також спричинить зростання ефективності штучного інтелекту, оскільки самонавчальні алгоритми зможуть швидше вивчати необхідну поведінку.
+
+
+
+\section*{Ресурси для поглибленого вивчення}
+\begin{enumerate}
+    \item Steven Skiena. The Algorithm Design Manual, 2\textsuperscript{nd} edition: {\itshape Chapter 8: Intractable Problems and Approximation Algorithms}.
+    \item Cormen, Leierson, Rivest, Stein. Introduction to Algorithms, 3\textsuperscript{rd} edition: {\itshape Chapter 34: NP-Completeness}.
+    \item Heuristics for the Traveling Salesman Problem:
+
+          \href{https://web.tuke.sk/fei-cit/butka/hop/htsp.pdf}{https://web.tuke.sk/fei-cit/butka/hop/htsp.pdf}\end{enumerate}
 
 \end{document}
